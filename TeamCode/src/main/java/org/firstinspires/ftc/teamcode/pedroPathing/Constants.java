@@ -11,11 +11,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
+// propably something important ^
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(5);
-
+// ASSUMED MASS OF BOT 5(KG) NEEEEED TO CHANGE^
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
     // DRIVE TRAIN CONFIG FOR DIRECTION + POWER
@@ -39,12 +39,7 @@ public static PinpointConstants localizerConstants = new PinpointConstants()
         .hardwareMapName("pinpoint") // MAKE SURE TO ADD NAME TO DRIVE HUB
         .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD) // WE ASSUME WE HAVE THIS MAY NEED TO DOUBLE CHECK
         .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
-        .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
-
-
-
-
-
+        .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD); //untested cz biyon slow TO DO
 
 
 
