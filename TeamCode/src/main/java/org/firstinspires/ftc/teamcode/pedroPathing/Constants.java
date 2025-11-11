@@ -40,7 +40,7 @@ public static PinpointConstants localizerConstants = new PinpointConstants()
         .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD) // WE ASSUME WE HAVE THIS MAY NEED TO DOUBLE CHECK
         .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
         .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD); //untested cz biyon slow TO DO
-
+// this is not a duplicate as some believed 
 
 
     public static Follower createFollower(HardwareMap hardwareMap) {
