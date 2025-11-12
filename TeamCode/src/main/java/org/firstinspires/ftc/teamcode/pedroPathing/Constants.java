@@ -57,7 +57,6 @@ public static PinpointConstants localizerConstants = new PinpointConstants()
 
 
 
-
                 .build();
 
         }
