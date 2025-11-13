@@ -38,7 +38,7 @@ public static PinpointConstants localizerConstants = new PinpointConstants()
         .distanceUnit(DistanceUnit.INCH)
         .hardwareMapName("pinpoint") // MAKE SURE TO ADD NAME TO DRIVE HUB
         .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD) // WE ASSUME WE HAVE THIS MAY NEED TO DOUBLE CHECK
-        .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
+        .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
         .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED); //untested cz biyon slow TO DO
 // this is not a duplicate as some believed
 
