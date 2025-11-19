@@ -28,7 +28,10 @@ public class Constants {
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD);
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .xVelocity(50.55708108736775);
+
+
 // ACCORDING TO THE MANUEL WE MAY HAVE TO "REVERSE" THE MOTOR DIRECTION ^
 
 // THIS IS USED TO GET OUR LOCATION WE USE PINPOINT
@@ -38,7 +41,7 @@ public static PinpointConstants localizerConstants = new PinpointConstants()
         .distanceUnit(DistanceUnit.INCH)
         .hardwareMapName("pinpoint") // MAKE SURE TO ADD NAME TO DRIVE HUB
         .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD) // WE ASSUME WE HAVE THIS MAY NEED TO DOUBLE CHECK
-        .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
+        .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
         .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED); //untested cz biyon slow TO DO
 // this is not a duplicate as some believed
 
@@ -48,6 +51,7 @@ public static PinpointConstants localizerConstants = new PinpointConstants()
                 .pinpointLocalizer(localizerConstants)
                 .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(driveConstants)
+
 
 
 
