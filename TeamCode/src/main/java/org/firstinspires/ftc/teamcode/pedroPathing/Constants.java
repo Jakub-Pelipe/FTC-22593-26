@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 // propably something important ^
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(5);
+            .mass(6);
 // ASSUMED MASS OF BOT 5(KG) NEEEEED TO CHANGE^
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
@@ -29,7 +29,7 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .xVelocity(50.55708108736775);
+            .xVelocity(44.872270238681104);
 
 
 // ACCORDING TO THE MANUEL WE MAY HAVE TO "REVERSE" THE MOTOR DIRECTION ^
