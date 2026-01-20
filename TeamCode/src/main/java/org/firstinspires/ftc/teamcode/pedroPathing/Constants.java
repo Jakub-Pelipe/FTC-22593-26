@@ -20,7 +20,7 @@ public class Constants {
 
     // DRIVE TRAIN CONFIG FOR DIRECTION + POWER
     public static MecanumConstants driveConstants = new MecanumConstants()
-            .maxPower(1)
+            .maxPower(0.8)
             .rightFrontMotorName("frontRight")
             .rightRearMotorName("rearRight")
             .leftRearMotorName("rearLeft")
@@ -29,7 +29,10 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .xVelocity(44.872270238681104);
+            .xVelocity(52.75421286755659)
+            .yVelocity(42.41698762187808);
+
+
 
 
 // ACCORDING TO THE MANUEL WE MAY HAVE TO "REVERSE" THE MOTOR DIRECTION ^
