@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.TelemetryManager;
 import com.bylazar.telemetry.PanelsTelemetry;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.follower.Follower;
@@ -56,59 +57,59 @@ public class testpaths extends OpMode {
         public Paths(Follower follower) {
             Path1 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(72.045, 81.805),
+                                    new Pose(35.468, 134.351),
 
-                                    new Pose(17.649, 83.432)
+                                    new Pose(60.969, 93.660)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135))
 
                     .build();
 
             Path2 = follower.pathBuilder().addPath(
-                            new BezierLine(
-                                    new Pose(17.649, 83.432),
-
-                                    new Pose(61.304, 93.309)
+                            new BezierCurve(
+                                    new Pose(60.969, 93.660),
+                                    new Pose(39.688, 81.758),
+                                    new Pose(18.384, 83.883)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(135))
+                    ).setConstantHeadingInterpolation(Math.toRadians(180))
 
                     .build();
 
             Path3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(61.304, 93.309),
-                                    new Pose(67.510, 54.791),
-                                    new Pose(22.797, 59.616)
-                            )
-                    ).setTangentHeadingInterpolation()
-
-                    .build();
-
-            Path4 = follower.pathBuilder().addPath(
-                            new BezierCurve(
-                                    new Pose(22.797, 59.616),
-                                    new Pose(18.206, 86.618),
-                                    new Pose(60.953, 93.153)
+                                    new Pose(18.384, 83.883),
+                                    new Pose(45.454, 83.175),
+                                    new Pose(60.903, 93.710)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(135))
 
                     .build();
 
-            Path5 = follower.pathBuilder().addPath(
+            Path4 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(60.953, 93.153),
-                                    new Pose(69.664, 31.788),
-                                    new Pose(19.017, 35.387)
+                                    new Pose(60.903, 93.710),
+                                    new Pose(77.975, 57.635),
+                                    new Pose(16.429, 59.460)
                             )
-                    ).setTangentHeadingInterpolation()
+                    ).setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(180))
+
+                    .build();
+
+            Path5 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(16.429, 59.460),
+
+                                    new Pose(60.733, 93.549)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(135))
 
                     .build();
 
             Path6 = follower.pathBuilder().addPath(
-                            new BezierCurve(
-                                    new Pose(19.017, 35.387),
-                                    new Pose(14.203, 47.478),
-                                    new Pose(18.231, 71.184)
+                            new BezierLine(
+                                    new Pose(60.733, 93.549),
+
+                                    new Pose(38.487, 33.279)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(90))
 
@@ -123,4 +124,3 @@ public class testpaths extends OpMode {
         // Refer to the Pedro Pathing Docs (Auto Example) for an example state machine
     }
 }
-
