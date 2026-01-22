@@ -30,14 +30,10 @@ public class testpaths extends OpMode {
         public PathChain Path5;
         public PathChain Path6;
 
-        public Paths(Follower follower) {
-            Path1 = follower.pathBuilder().addPath(
-                            new BezierLine(
-                                    new Pose(35.468, 134.351),
+        public void buildPath() {
+            Path1 = new Path(new BezierLine(Pose(35.468,134.351));
 
-                                    new Pose(60.969, 93.660)
-                            )
-                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135))
+            Path1.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135))
 
                     .build();
 
