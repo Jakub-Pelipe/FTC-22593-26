@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
@@ -18,14 +19,16 @@ public class Constants {
             .mass(6.15)
             .forwardZeroPowerAcceleration(-77.9812473685754)
             .lateralZeroPowerAcceleration(-68.571125969759824)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.01,0))
-            .headingPIDFCoefficients(new PIDFCoefficients(1,0,0,0.01));
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.01,0.03))
+            .headingPIDFCoefficients(new PIDFCoefficients(1,0,0,0.04))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.08,0,0.001,0.6,0.03))
+            .centripetalScaling(0.005);
 // ASSUMED MASS OF BOT 5(KG) NEEEEED TO CHANGE^
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
+    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 0.8, 1);
 
     // DRIVE TRAIN CONFIG FOR DIRECTION + POWER
     public static MecanumConstants driveConstants = new MecanumConstants()
-            .maxPower(0.8)
+            .maxPower(0.7)
             .rightFrontMotorName("frontRight")
             .rightRearMotorName("rearRight")
             .leftRearMotorName("rearLeft")
@@ -34,7 +37,7 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .xVelocity(50.648985374630925)
+            .xVelocity(31.068961556502217)
             .yVelocity(43.85592098686639);
 
 
@@ -50,7 +53,8 @@ public static PinpointConstants localizerConstants = new PinpointConstants()
         .hardwareMapName("pinpoint") // MAKE SURE TO ADD NAME TO DRIVE HUB
         .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD) // WE ASSUME WE HAVE THIS MAY NEED TO DOUBLE CHECK
         .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
-        .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED); //untested cz biyon slow TO DO
+        .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+        //untested cz biyon slow TO DO
 // this is not a duplicate as some believed
 
 
