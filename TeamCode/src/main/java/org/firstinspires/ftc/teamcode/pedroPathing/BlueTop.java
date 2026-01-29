@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
@@ -9,17 +10,20 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous (name="testpedro", group = "Autonomous")
 public class BlueTop extends OpMode {
     private Follower follower;
     private DcMotor outake;
     private DcMotor intake;
+    private Servo kicker;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
     private final Pose startPose = new Pose(35.142, 134.15, Math.toRadians(270)); // Start Pose of our robot.
     private final Pose scorePose = new Pose(55.955, 95.666, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose pickup1Pose = new Pose(21.5, 84, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
+    private final Pose pickup1Pose = new Pose(23.289, 83.880, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
+    private final Pose control1=new Pose(68.909,83.564);
     private final Pose pickup2Pose = new Pose(24.8, 60, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
     private final Pose pickup3Pose = new Pose(24, 36, Math.toRadians(180)); // Lowest (Third Set) of Artifacts from the Spike Mark.
 
@@ -32,7 +36,7 @@ public class BlueTop extends OpMode {
         scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
 
         grabPickup1 = follower.pathBuilder()
-                .addPath(new BezierLine(scorePose, pickup1Pose))
+                .addPath(new BezierCurve(scorePose,control1, pickup1Pose))
                 .setLinearHeadingInterpolation(scorePose.getHeading(), pickup1Pose.getHeading())
                 .build();
 
@@ -76,7 +80,7 @@ public class BlueTop extends OpMode {
                 }
                 if (seconds>=3.0){
                     outake.setPower(0);
-                    pathState = -1;
+                    pathState = 2;
                 }
 
                 break;
@@ -168,11 +172,12 @@ public class BlueTop extends OpMode {
         opmodeTimer.resetTimer();
         outake=hardwareMap.get(DcMotor.class,"outake");
         intake=hardwareMap.get(DcMotor.class,"intake");
+        kicker=hardwareMap.get(Servo.class,"kicker");
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
-
+        
     }
 
     /**
