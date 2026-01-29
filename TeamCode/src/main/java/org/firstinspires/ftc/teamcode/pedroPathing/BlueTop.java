@@ -14,8 +14,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class BlueTop extends OpMode {
     private Follower follower;
     private DcMotor outake;
+    private DcMotor intake;
     private Timer pathTimer, actionTimer, opmodeTimer;
-    private double seconds;
     private int pathState;
     private final Pose startPose = new Pose(35.142, 134.15, Math.toRadians(270)); // Start Pose of our robot.
     private final Pose scorePose = new Pose(55.955, 95.666, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
@@ -63,6 +63,7 @@ public class BlueTop extends OpMode {
     }
 
     public void autonomousPathUpdate() {
+        double seconds;
         seconds=actionTimer.getElapsedTimeSeconds();
         switch (pathState) {
             case 0:
@@ -166,7 +167,7 @@ public class BlueTop extends OpMode {
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
         outake=hardwareMap.get(DcMotor.class,"outake");
-
+        intake=hardwareMap.get(DcMotor.class,"intake");
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
