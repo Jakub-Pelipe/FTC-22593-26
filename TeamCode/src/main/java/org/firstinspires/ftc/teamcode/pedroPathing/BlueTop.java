@@ -8,10 +8,12 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous (name="testpedro", group = "Autonomous")
 public class BlueTop extends OpMode {
     private Follower follower;
+    private DcMotor outake;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private double seconds;
     private int pathState;
@@ -66,9 +68,14 @@ public class BlueTop extends OpMode {
             case 0:
                 actionTimer.resetTimer();
                 follower.followPath(scorePreload);
-                seconds=actionTimer.getElapsedTimeSeconds();
+                if (!follower.isBusy()) {
+                    outake.setPower(1);
+                    actionTimer.resetTimer();
+
+                }
                 if (seconds>=3.0){
-                    pathState = 1;
+                    outake.setPower(0);
+                    pathState = -1;
                 }
 
                 break;
@@ -158,6 +165,7 @@ public class BlueTop extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
+        outake=hardwareMap.get(DcMotor.class,"outake");
 
 
         follower = Constants.createFollower(hardwareMap);
