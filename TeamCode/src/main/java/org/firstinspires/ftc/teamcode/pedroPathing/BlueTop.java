@@ -12,11 +12,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous (name="testpedro", group = "Autonomous")
+@Autonomous (name="BlueTop", group = "Autonomous")
 public class BlueTop extends OpMode {
     private Follower follower;
-    private DcMotor outake;
-    private DcMotor intake;
+    private DcMotor outtakeMotor;
+    private DcMotor intakeMotor;
     private Servo kicker;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
@@ -74,12 +74,12 @@ public class BlueTop extends OpMode {
                 actionTimer.resetTimer();
                 follower.followPath(scorePreload);
                 if (!follower.isBusy()) {
-                    outake.setPower(1);
+                    outtakeMotor.setPower(1);
                     actionTimer.resetTimer();
 
                 }
                 if (seconds>=3.0){
-                    outake.setPower(0);
+                    outtakeMotor.setPower(0);
                     pathState = 2;
                 }
 
@@ -102,10 +102,13 @@ public class BlueTop extends OpMode {
                 break;
             case 3:
                 if (!follower.isBusy()) {
-
-                    follower.followPath(grabPickup2, true);
-                    setPathState(4);
+                    outtakeMotor.setPower(1);
+                    actionTimer.resetTimer();
                 }
+                if (seconds>=3.0) {
+                follower.followPath(grabPickup2, true);
+                setPathState(4);
+            }
                 break;
             case 4:
 
@@ -170,8 +173,8 @@ public class BlueTop extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-        outake=hardwareMap.get(DcMotor.class,"outake");
-        intake=hardwareMap.get(DcMotor.class,"intake");
+        outtakeMotor=hardwareMap.get(DcMotor.class,"outtakeMotor");
+        intakeMotor=hardwareMap.get(DcMotor.class,"intakeMotor");
         kicker=hardwareMap.get(Servo.class,"kicker");
 
         follower = Constants.createFollower(hardwareMap);
