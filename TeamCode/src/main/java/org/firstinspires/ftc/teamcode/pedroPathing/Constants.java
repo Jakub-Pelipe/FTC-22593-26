@@ -23,7 +23,7 @@ public class Constants {
             .headingPIDFCoefficients(new PIDFCoefficients(1,0,0,0.04))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.08,0,0.001,0.6,0.03))
             .centripetalScaling(0.003);
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1.5);
+    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 0.85, 1.5);
 
     // DRIVE TRAIN CONFIG FOR DIRECTION + POWER
     public static MecanumConstants driveConstants = new MecanumConstants()
