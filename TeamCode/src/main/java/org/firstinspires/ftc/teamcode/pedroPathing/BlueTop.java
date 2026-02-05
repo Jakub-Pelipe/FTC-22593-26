@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous (name="BlueTop", group = "Autonomous")
 public class BlueTop extends OpMode {
     private Follower follower;
+    public double seconds;
     private DcMotor outtakeMotor;
     private DcMotor intakeMotor;
     private Servo kicker;
@@ -67,23 +68,21 @@ public class BlueTop extends OpMode {
     }
 
     public void autonomousPathUpdate() {
-        double seconds;
-        //seconds=actionTimer.getElapsedTimeSeconds();
+        seconds=actionTimer.getElapsedTimeSeconds();
         switch (pathState) {
             case 0:
-                //actionTimer.resetTimer();
+                actionTimer.resetTimer();
                 follower.followPath(scorePreload);
                 pathState=1;
-                //if (!follower.isBusy()) {
-                    //outtakeMotor.setPower(0.2);
-                    //actionTimer.resetTimer();
-                    //pathState=1;
+                if (!follower.isBusy()) {
+                    outtakeMotor.setPower(0.2);
+                    actionTimer.resetTimer();
 
-               // }
-                //if (seconds>=3.0){
-                    //outtakeMotor.setPower(0);
-                    //pathState = 1;
-                //}
+                }
+                if (seconds>=3.0){
+                    outtakeMotor.setPower(0);
+                    pathState = 1;
+                }
 
                 break;
             case 1:
