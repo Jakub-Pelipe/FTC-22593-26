@@ -19,11 +19,10 @@ public class Constants {
             .mass(6.15)
             .forwardZeroPowerAcceleration(-77.9812473685754)
             .lateralZeroPowerAcceleration(-68.571125969759824)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.01,0.03))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.11,0,0.008,0.03))
             .headingPIDFCoefficients(new PIDFCoefficients(1,0,0,0.04))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.08,0,0.001,0.6,0.03))
-            .centripetalScaling(0.005);
-// ASSUMED MASS OF BOT 5(KG) NEEEEED TO CHANGE^
+            .centripetalScaling(0.003);
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1.5);
 
     // DRIVE TRAIN CONFIG FOR DIRECTION + POWER
@@ -37,7 +36,7 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .xVelocity(31.068961556502217)
+            .xVelocity(43.59985207384966)
             .yVelocity(43.85592098686639);
 
 

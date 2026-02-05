@@ -68,20 +68,22 @@ public class BlueTop extends OpMode {
 
     public void autonomousPathUpdate() {
         double seconds;
-        seconds=actionTimer.getElapsedTimeSeconds();
+        //seconds=actionTimer.getElapsedTimeSeconds();
         switch (pathState) {
             case 0:
-                actionTimer.resetTimer();
+                //actionTimer.resetTimer();
                 follower.followPath(scorePreload);
-                if (!follower.isBusy()) {
-                    outtakeMotor.setPower(1);
-                    actionTimer.resetTimer();
+                pathState=1;
+                //if (!follower.isBusy()) {
+                    //outtakeMotor.setPower(0.2);
+                    //actionTimer.resetTimer();
+                    //pathState=1;
 
-                }
-                if (seconds>=3.0){
-                    outtakeMotor.setPower(0);
-                    pathState = 2;
-                }
+               // }
+                //if (seconds>=3.0){
+                    //outtakeMotor.setPower(0);
+                    //pathState = 1;
+                //}
 
                 break;
             case 1:
@@ -103,12 +105,12 @@ public class BlueTop extends OpMode {
             case 3:
                 if (!follower.isBusy()) {
                     outtakeMotor.setPower(1);
-                    actionTimer.resetTimer();
+                    //actionTimer.resetTimer();
                 }
-                if (seconds>=3.0) {
-                follower.followPath(grabPickup2, true);
+                //if (seconds>=3.0) {
+                //follower.followPath(grabPickup2, true);
                 setPathState(4);
-            }
+            //}
                 break;
             case 4:
 
@@ -144,7 +146,7 @@ public class BlueTop extends OpMode {
      **/
     public void setPathState(int pState) {
         pathState = pState;
-        pathTimer.resetTimer();
+        //pathTimer.resetTimer();
     }
 
     /**
@@ -173,7 +175,7 @@ public class BlueTop extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-        outtakeMotor=hardwareMap.get(DcMotor.class,"outtakeMotor");
+        outtakeMotor=hardwareMap.get(DcMotor.class,"outakeMotor");
         intakeMotor=hardwareMap.get(DcMotor.class,"intakeMotor");
         kicker=hardwareMap.get(Servo.class,"kicker");
 
