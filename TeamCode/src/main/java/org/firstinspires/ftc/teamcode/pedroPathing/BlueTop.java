@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class BlueTop extends OpMode {
     private Follower follower;
     public double seconds;
-    private DcMotor outtakeMotor;
+    private DcMotor outakeMotor;
     private DcMotor intakeMotor;
     private Servo kicker;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -73,26 +73,20 @@ public class BlueTop extends OpMode {
             case 0:
                 actionTimer.resetTimer();
                 follower.followPath(scorePreload);
-                pathState=1;
-                if (!follower.isBusy()) {
-                    outtakeMotor.setPower(0.2);
-                    actionTimer.resetTimer();
-
-                }
-
+                pathState=1;;
                 break;
             case 1:
-                outtakeMotor.setPower(0.2);
+                outakeMotor.setPower(0.5);
                 actionTimer.resetTimer();
                 if (seconds>=3.0){
-                    outtakeMotor.setPower(0);
+                    outakeMotor.setPower(0);
+                    if (!follower.isBusy()) {
+
+                        follower.followPath(grabPickup1, true);
+                        setPathState(2);
+                    }
                 }
 
-                if (!follower.isBusy()) {
-
-                    follower.followPath(grabPickup1, true);
-                    setPathState(2);
-                }
                 break;
             case 2:
 
@@ -146,7 +140,7 @@ public class BlueTop extends OpMode {
      **/
     public void setPathState(int pState) {
         pathState = pState;
-        //pathTimer.resetTimer();
+        pathTimer.resetTimer();
     }
 
     /**
@@ -175,7 +169,7 @@ public class BlueTop extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-        outtakeMotor=hardwareMap.get(DcMotor.class,"outakeMotor");
+        outakeMotor=hardwareMap.get(DcMotor.class,"outakeMotor");
         intakeMotor=hardwareMap.get(DcMotor.class,"intakeMotor");
         kicker=hardwareMap.get(Servo.class,"kicker");
 
@@ -199,6 +193,7 @@ public class BlueTop extends OpMode {
     @Override
     public void start() {
         opmodeTimer.resetTimer();
+        pathTimer.resetTimer();
         setPathState(0);
     }
 
