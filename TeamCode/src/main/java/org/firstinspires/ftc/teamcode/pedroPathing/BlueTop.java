@@ -98,7 +98,7 @@ public class BlueTop extends OpMode {
                 break;
             case 3:
                 if (!follower.isBusy()) {
-                    outtakeMotor.setPower(1);
+                    outakeMotor.setPower(1);
                     //actionTimer.resetTimer();
                 }
                 //if (seconds>=3.0) {
