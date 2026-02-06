@@ -29,7 +29,7 @@ public class BlueTop extends OpMode {
     private final Pose pickup3Pose = new Pose(24, 36, Math.toRadians(180)); // Lowest (Third Set) of Artifacts from the Spike Mark.
 
     private Path scorePreload;
-    private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
+    private PathChain grabPickup1, scorePickup1,grabPickup2, scorePickup2, grabPickup3, scorePickup3;
 
 
     public void buildPaths() {
@@ -71,7 +71,6 @@ public class BlueTop extends OpMode {
         seconds=actionTimer.getElapsedTimeSeconds();
         switch (pathState) {
             case 0:
-                actionTimer.resetTimer();
                 follower.followPath(scorePreload);
                 pathState=1;;
                 break;
@@ -110,20 +109,20 @@ public class BlueTop extends OpMode {
 
                 if (!follower.isBusy()) {
 
-                    follower.followPath(scorePickup2, true);
+                    follower.followPath(grabPickup2, true);
                     setPathState(5);
                 }
                 break;
             case 5:
                 if (!follower.isBusy()) {
 
-                    follower.followPath(grabPickup3, true);
+                    follower.followPath(scorePickup2, true);
                     setPathState(6);
                 }
                 break;
             case 6:
                 if (!follower.isBusy()) {
-                    follower.followPath(scorePickup3, true);
+                    follower.followPath(grabPickup3, true);
                     setPathState(7);
                 }
                 break;
