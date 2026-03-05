@@ -38,7 +38,7 @@ public class BlueTop extends OpMode {
         scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
 
         grabPickup1 = follower.pathBuilder()
-                .addPath(new BezierCurve(scorePose, pickup1Pose))
+                .addPath(new BezierCurve(scorePose,control1, pickup1Pose))
                 .setLinearHeadingInterpolation(scorePose.getHeading(), pickup1Pose.getHeading())
                 .build();
 
