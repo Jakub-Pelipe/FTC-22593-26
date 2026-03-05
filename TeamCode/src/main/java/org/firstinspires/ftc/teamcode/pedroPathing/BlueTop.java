@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class BlueTop extends OpMode {
     private Follower follower;
     public double seconds;
+    public double distance;
     private DcMotor outakeMotor;
     private DcMotor intakeMotor;
     private Servo kicker;
@@ -37,7 +38,7 @@ public class BlueTop extends OpMode {
         scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
 
         grabPickup1 = follower.pathBuilder()
-                .addPath(new BezierCurve(scorePose,control1, pickup1Pose))
+                .addPath(new BezierCurve(scorePose, pickup1Pose))
                 .setLinearHeadingInterpolation(scorePose.getHeading(), pickup1Pose.getHeading())
                 .build();
 
@@ -68,7 +69,8 @@ public class BlueTop extends OpMode {
     }
 
     public void autonomousPathUpdate() {
-        seconds=actionTimer.getElapsedTimeSeconds();
+        seconds=actionTimer.getElapsedTime();
+        distance=follower.getDistanceRemaining();
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload);
@@ -88,11 +90,14 @@ public class BlueTop extends OpMode {
 
                 break;
             case 2:
-
-                if (!follower.isBusy()) {
-
-                    follower.followPath(scorePickup1, true);
-                    setPathState(3);
+                if (distance<0.5) {
+                    intakeMotor.setPower(1);
+                    follower.setMaxPowerScaling(0.2);
+                    if (!follower.isBusy()) {
+                        follower.followPath(scorePickup1, true);
+                        follower.setMaxPowerScaling((1));
+                        setPathState(3);
+                    }
                 }
                 break;
             case 3:
