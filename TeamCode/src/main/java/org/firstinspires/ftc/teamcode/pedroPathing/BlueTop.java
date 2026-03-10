@@ -19,10 +19,10 @@ public class BlueTop extends OpMode {
     private DcMotor outakeMotor;
     private DcMotor intakeMotor;
     private Servo kicker;
-    public Timer pathTimer, opmodeTimer;
+    public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
     private final Pose startPose = new Pose(34.941504178272965, 134.55153203342624, Math.toRadians(270)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(55.955, 95.666, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose scorePose = new Pose(60, 85, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
     private final Pose pickup1Pose = new Pose(15.041782729805018, 84.03342618384406, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
     private final Pose control1=new Pose(81.33983286908078,79.9136490250697);
     private final Pose pickup2Pose = new Pose(24.8, 60, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
@@ -68,7 +68,6 @@ public class BlueTop extends OpMode {
     }
 
     public void autonomousPathUpdate() {
-        Timer actionTimer=new Timer();
         seconds=actionTimer.getElapsedTime();
         distance=follower.getDistanceRemaining();
         switch (pathState) {
@@ -175,6 +174,7 @@ public class BlueTop extends OpMode {
         outakeMotor=hardwareMap.get(DcMotor.class,"outakeMotor");
         intakeMotor=hardwareMap.get(DcMotor.class,"intakeMotor");
         kicker=hardwareMap.get(Servo.class,"kicker");
+        actionTimer.resetTimer();
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
