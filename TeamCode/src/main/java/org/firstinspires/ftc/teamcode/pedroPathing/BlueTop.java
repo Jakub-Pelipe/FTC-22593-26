@@ -14,10 +14,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous (name="BlueTop", group = "Autonomous")
 public class BlueTop extends OpMode {
     private Follower follower;
-    public double seconds;
+    public double milliseconds;
     public double distance;
-    private DcMotor outakeMotor;
+    private DcMotor outtakeMotor;
     private DcMotor intakeMotor;
+    private DcMotor intake2;
     private Servo kicker;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
@@ -68,17 +69,23 @@ public class BlueTop extends OpMode {
     }
 
     public void autonomousPathUpdate() {
-        seconds=actionTimer.getElapsedTime();
         distance=follower.getDistanceRemaining();
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload);
+                actionTimer.resetTimer();
                 pathState=1;;
                 break;
             case 1:
-                outakeMotor.setPower(0.5);
-                if (seconds>=3.0){
-                    outakeMotor.setPower(0);
+                outtakeMotor.setPower(0.5);
+
+                if (milliseconds>=1000){
+                    intakeMotor.setPower(1);
+                    intake2.setPower(1);
+                }
+                if (milliseconds>=10000){
+                    outtakeMotor.setPower(0);
+                    intake2.setPower(0);
                     if (!follower.isBusy()) {
 
                         follower.followPath(grabPickup1, true);
@@ -88,7 +95,7 @@ public class BlueTop extends OpMode {
 
                 break;
             case 2:
-                if (distance<0.5) {
+                if (distance<10) {
                     intakeMotor.setPower(1);
                     follower.setMaxPowerScaling(0.2);
                     if (!follower.isBusy()) {
@@ -100,7 +107,7 @@ public class BlueTop extends OpMode {
                 break;
             case 3:
                 if (!follower.isBusy()) {
-                    outakeMotor.setPower(1);
+                    outtakeMotor.setPower(1);
                     //actionTimer.resetTimer();
                 }
                 //if (seconds>=3.0) {
@@ -150,7 +157,7 @@ public class BlueTop extends OpMode {
      **/
     @Override
     public void loop() {
-
+        milliseconds=actionTimer.getElapsedTime();
         // These loop the movements of the robot, these must be called continuously in order to work
         follower.update();
         autonomousPathUpdate();
@@ -160,6 +167,7 @@ public class BlueTop extends OpMode {
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("time",milliseconds);
         telemetry.update();
     }
 
@@ -169,12 +177,14 @@ public class BlueTop extends OpMode {
     @Override
     public void init() {
         pathTimer = new Timer();
+        actionTimer=new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-        outakeMotor=hardwareMap.get(DcMotor.class,"outakeMotor");
+        outtakeMotor=hardwareMap.get(DcMotor.class,"outtakeMotor");
         intakeMotor=hardwareMap.get(DcMotor.class,"intakeMotor");
+        intake2=hardwareMap.get(DcMotor.class,"intake2");
         kicker=hardwareMap.get(Servo.class,"kicker");
-        actionTimer.resetTimer();
+
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
@@ -197,6 +207,7 @@ public class BlueTop extends OpMode {
     public void start() {
         opmodeTimer.resetTimer();
         pathTimer.resetTimer();
+
         setPathState(0);
     }
 
