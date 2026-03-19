@@ -22,10 +22,10 @@ public class BlueTop extends OpMode {
     private Servo kicker;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
-    private final Pose startPose = new Pose(34.941504178272965, 134.55153203342624, Math.toRadians(270)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(60, 85, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose pickup1Pose = new Pose(15.041782729805018, 84.03342618384406, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
-    private final Pose control1=new Pose(81.33983286908078,79.9136490250697);
+    private final Pose startPose = new Pose(34.942, 136.401, Math.toRadians(270)); // Start Pose of our robot.
+    private final Pose scorePose = new Pose(64.613, 83.396, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose pickup1Pose = new Pose(23.463, 83.829, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
+    private final Pose control1=new Pose(81.340,79.914);
     private final Pose pickup2Pose = new Pose(24.8, 60, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
     private final Pose pickup3Pose = new Pose(24, 36, Math.toRadians(180)); // Lowest (Third Set) of Artifacts from the Spike Mark.
 
@@ -69,7 +69,6 @@ public class BlueTop extends OpMode {
     }
 
     public void autonomousPathUpdate() {
-        distance=follower.getDistanceRemaining();
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload);
@@ -79,17 +78,17 @@ public class BlueTop extends OpMode {
             case 1:
                 outtakeMotor.setPower(0.5);
 
-                if (milliseconds>=1000){
+                if (milliseconds>=2600){
                     intakeMotor.setPower(1);
                     intake2.setPower(1);
                 }
-                if (milliseconds>=10000){
+                if (milliseconds>=5000){
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
-
                         follower.followPath(grabPickup1, true);
                         setPathState(2);
+                        actionTimer.resetTimer();
                     }
                 }
 
@@ -168,6 +167,7 @@ public class BlueTop extends OpMode {
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("time",milliseconds);
+        telemetry.addData("Distance",distance);
         telemetry.update();
     }
 
@@ -207,6 +207,7 @@ public class BlueTop extends OpMode {
     public void start() {
         opmodeTimer.resetTimer();
         pathTimer.resetTimer();
+        distance=follower.getDistanceRemaining();
 
         setPathState(0);
     }
