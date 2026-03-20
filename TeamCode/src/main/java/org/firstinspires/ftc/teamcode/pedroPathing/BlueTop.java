@@ -20,6 +20,7 @@ public class BlueTop extends OpMode {
     private DcMotor intakeMotor;
     private DcMotor intake2;
     private Servo kicker;
+    private Servo rightBarrier;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
     private final Pose startPose = new Pose(34.942, 136.401, Math.toRadians(270)); // Start Pose of our robot.
@@ -39,7 +40,7 @@ public class BlueTop extends OpMode {
 
         grabPickup1 = follower.pathBuilder()
                 .addPath(new BezierLine(scorePose, pickup1Pose))
-                .setLinearHeadingInterpolation(scorePose.getHeading(), pickup1Pose.getHeading())
+                .setTangentHeadingInterpolation()
                 .build();
 
         scorePickup1 = follower.pathBuilder()
@@ -76,7 +77,7 @@ public class BlueTop extends OpMode {
                 pathState=1;;
                 break;
             case 1:
-                outtakeMotor.setPower(0.5);
+                outtakeMotor.setPower(0.8);
 
                 if (milliseconds>=2600){
                     intakeMotor.setPower(1);
@@ -88,15 +89,18 @@ public class BlueTop extends OpMode {
                     if (!follower.isBusy()) {
                         follower.followPath(grabPickup1, true);
                         setPathState(2);
+                        kicker.setPosition(1);
+                        rightBarrier.setPosition(0.1);
                         actionTimer.resetTimer();
                     }
                 }
 
                 break;
             case 2:
-                if (distance<10) {
+                if (distance<4) {
                     intakeMotor.setPower(1);
-                    follower.setMaxPowerScaling(0.2);
+                    follower.setMaxPowerScaling(0.3);
+
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup1, true);
                         follower.setMaxPowerScaling((1));
@@ -111,7 +115,7 @@ public class BlueTop extends OpMode {
                 }
                 //if (seconds>=3.0) {
                 //follower.followPath(grabPickup2, true);
-                setPathState(4);
+                    setPathState(4);
             //}
                 break;
             case 4:
@@ -157,6 +161,7 @@ public class BlueTop extends OpMode {
     @Override
     public void loop() {
         milliseconds=actionTimer.getElapsedTime();
+        distance=follower.getDistanceRemaining();
         // These loop the movements of the robot, these must be called continuously in order to work
         follower.update();
         autonomousPathUpdate();
@@ -184,6 +189,7 @@ public class BlueTop extends OpMode {
         intakeMotor=hardwareMap.get(DcMotor.class,"intakeMotor");
         intake2=hardwareMap.get(DcMotor.class,"intake2");
         kicker=hardwareMap.get(Servo.class,"kicker");
+        rightBarrier=hardwareMap.get(Servo.class,"rightBarrier");
 
 
         follower = Constants.createFollower(hardwareMap);
@@ -207,7 +213,6 @@ public class BlueTop extends OpMode {
     public void start() {
         opmodeTimer.resetTimer();
         pathTimer.resetTimer();
-        distance=follower.getDistanceRemaining();
 
         setPathState(0);
     }
