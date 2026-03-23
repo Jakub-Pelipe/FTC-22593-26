@@ -23,7 +23,7 @@ public class BlueTop extends OpMode {
     private Servo rightBarrier;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
-    private final Pose startPose = new Pose(106.741, 134.752, Math.toRadians(270)); // Start Pose of our robot.
+    private final Pose startPose = new Pose(35.543, 134.752, Math.toRadians(270)); // Start Pose of our robot.
     private final Pose scorePose = new Pose(64.613, 83.396, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
     private final Pose pickup1Pose = new Pose(30.5, 83.227, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
     private final Pose control1=new Pose(81.340,79.914);
@@ -60,7 +60,7 @@ public class BlueTop extends OpMode {
 
         grabPickup3 = follower.pathBuilder()
                 .addPath(new BezierLine(scorePose, pickup3Pose))
-                .setLinearHeadingInterpolation(scorePose.getHeading(), pickup3Pose.getHeading())
+                .setTangentHeadingInterpolation()
                 .build();
 
         scorePickup3 = follower.pathBuilder()
