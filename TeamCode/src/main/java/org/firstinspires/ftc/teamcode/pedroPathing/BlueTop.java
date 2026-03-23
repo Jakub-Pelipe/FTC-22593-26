@@ -132,7 +132,7 @@ public class BlueTop extends OpMode {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
-                        follower.followPath(grabPickup1, true);
+                        follower.followPath(grabPickup2, true);
                         kicker.setPosition(1);
                         rightBarrier.setPosition(0.1);
                         actionTimer.resetTimer();
@@ -157,18 +157,53 @@ public class BlueTop extends OpMode {
                 }
                 break;
             case 4:
+                if (distance<0.5) {
+                    intakeMotor.setPower(-1);
+                    follower.setMaxPowerScaling(0.3);
 
-                if (!follower.isBusy()) {
-
-                    follower.followPath(grabPickup2, true);
-                    setPathState(5);
+                    if (!follower.isBusy()) {
+                        follower.followPath(scorePickup2, true);
+                        intakeMotor.setPower(0);
+                        follower.setMaxPowerScaling((1));
+                        actionTimer.resetTimer();
+                        setPathState(5);
+                    }
                 }
                 break;
             case 5:
-                if (!follower.isBusy()) {
+                outtakeMotor.setPower(0.8);
+                //change to open gate position
+                rightBarrier.setPosition(0.1);
+                kicker.setPosition(1);
 
-                    follower.followPath(scorePickup2, true);
-                    setPathState(6);
+                //change timing
+                if (milliseconds>=4300){
+                    outtakeMotor.setPower(0);
+                    intake2.setPower(0);
+                    if (!follower.isBusy()) {
+                        follower.followPath(grabPickup3, true);
+                        kicker.setPosition(1);
+                        rightBarrier.setPosition(0.1);
+                        actionTimer.resetTimer();
+                        setPathState(-1);
+
+                    }
+
+                }
+                //change timing
+                else if (milliseconds>=3400){
+                    intake2.setPower(1);
+                    intakeMotor.setPower(-1);
+                }
+                //change timing
+                else if (milliseconds>=2600){
+                    intake2.setPower(0);
+                    intakeMotor.setPower(0);
+                }
+                //change timing
+                else if (milliseconds>=2100){
+                    intakeMotor.setPower(-1);
+                    intake2.setPower(1);
                 }
                 break;
             case 6:
