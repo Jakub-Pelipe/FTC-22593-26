@@ -23,9 +23,9 @@ public class BlueTop extends OpMode {
     private Servo rightBarrier;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
-    private final Pose startPose = new Pose(34.942, 136.401, Math.toRadians(270)); // Start Pose of our robot.
+    private final Pose startPose = new Pose(106.741, 134.752, Math.toRadians(270)); // Start Pose of our robot.
     private final Pose scorePose = new Pose(64.613, 83.396, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose pickup1Pose = new Pose(23.463, 83.829, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
+    private final Pose pickup1Pose = new Pose(30.5, 83.227, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
     private final Pose control1=new Pose(81.340,79.914);
     private final Pose pickup2Pose = new Pose(24.8, 60, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
     private final Pose pickup3Pose = new Pose(24, 36, Math.toRadians(180)); // Lowest (Third Set) of Artifacts from the Spike Mark.
@@ -77,9 +77,9 @@ public class BlueTop extends OpMode {
                 pathState=1;;
                 break;
             case 1:
-                outtakeMotor.setPower(0.85);
+                outtakeMotor.setPower(0.8);
 
-                if (milliseconds>=6000){
+                if (milliseconds>=5000){
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
@@ -92,19 +92,24 @@ public class BlueTop extends OpMode {
 
                 }
 
-                else if (milliseconds>=2800){
+                else if (milliseconds>=4200){
+                    intake2.setPower(1);
+                    intakeMotor.setPower(-1);
+                }
+
+                else if (milliseconds>=3500){
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
                 }
-                else if (milliseconds>=2600){
-                    intakeMotor.setPower(1);
+                else if (milliseconds>=3100){
+                    intakeMotor.setPower(-1);
                     intake2.setPower(1);
                 }
 
                 break;
             case 2:
                 if (distance<0.2) {
-                    intakeMotor.setPower(1);
+                    intakeMotor.setPower(-1);
                     follower.setMaxPowerScaling(0.3);
 
                     if (!follower.isBusy()) {
