@@ -27,7 +27,7 @@ public class BlueTop extends OpMode {
     private final Pose scorePose = new Pose(64.613, 83.396, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
     private final Pose pickup1Pose = new Pose(30.5, 83.227, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
     private final Pose control1=new Pose(81.340,79.914);
-    private final Pose pickup2Pose = new Pose(24.8, 60, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
+    private final Pose pickup2Pose = new Pose(26.874, 60.568, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
     private final Pose pickup3Pose = new Pose(24, 36, Math.toRadians(180)); // Lowest (Third Set) of Artifacts from the Spike Mark.
 
     private Path scorePreload;
@@ -50,7 +50,7 @@ public class BlueTop extends OpMode {
 
         grabPickup2 = follower.pathBuilder()
                 .addPath(new BezierLine(scorePose, pickup2Pose))
-                .setLinearHeadingInterpolation(scorePose.getHeading(), pickup2Pose.getHeading())
+                .setTangentHeadingInterpolation()
                 .build();
 
         scorePickup2 = follower.pathBuilder()
@@ -84,10 +84,11 @@ public class BlueTop extends OpMode {
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
                         follower.followPath(grabPickup1, true);
-                        setPathState(2);
                         kicker.setPosition(1);
                         rightBarrier.setPosition(0.1);
                         actionTimer.resetTimer();
+                        setPathState(2);
+
                     }
 
                 }
@@ -97,7 +98,7 @@ public class BlueTop extends OpMode {
                     intakeMotor.setPower(-1);
                 }
 
-                else if (milliseconds>=3500){
+                else if (milliseconds>=3600){
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
                 }
@@ -114,20 +115,46 @@ public class BlueTop extends OpMode {
 
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup1, true);
+                        intakeMotor.setPower(0);
                         follower.setMaxPowerScaling((1));
+                        actionTimer.resetTimer();
                         setPathState(3);
                     }
                 }
                 break;
             case 3:
-                if (!follower.isBusy()) {
-                    outtakeMotor.setPower(1);
-                    //actionTimer.resetTimer();
+                outtakeMotor.setPower(0.8);
+                //change to open gate position
+                rightBarrier.setPosition(0.1);
+                kicker.setPosition(1);
+
+                if (milliseconds>=4300){
+                    outtakeMotor.setPower(0);
+                    intake2.setPower(0);
+                    if (!follower.isBusy()) {
+                        follower.followPath(grabPickup1, true);
+                        kicker.setPosition(1);
+                        rightBarrier.setPosition(0.1);
+                        actionTimer.resetTimer();
+                        setPathState(4);
+
+                    }
+
                 }
-                //if (seconds>=3.0) {
-                //follower.followPath(grabPickup2, true);
-                    setPathState(4);
-            //}
+
+                else if (milliseconds>=3400){
+                    intake2.setPower(1);
+                    intakeMotor.setPower(-1);
+                }
+
+                else if (milliseconds>=2600){
+                    intake2.setPower(0);
+                    intakeMotor.setPower(0);
+                }
+                else if (milliseconds>=2100){
+                    intakeMotor.setPower(-1);
+                    intake2.setPower(1);
+                }
                 break;
             case 4:
 
