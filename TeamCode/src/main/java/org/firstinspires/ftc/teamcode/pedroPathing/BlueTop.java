@@ -77,13 +77,9 @@ public class BlueTop extends OpMode {
                 pathState=1;;
                 break;
             case 1:
-                outtakeMotor.setPower(0.8);
+                outtakeMotor.setPower(0.85);
 
-                if (milliseconds>=2600){
-                    intakeMotor.setPower(1);
-                    intake2.setPower(1);
-                }
-                if (milliseconds>=5000){
+                if (milliseconds>=6000){
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
@@ -93,11 +89,21 @@ public class BlueTop extends OpMode {
                         rightBarrier.setPosition(0.1);
                         actionTimer.resetTimer();
                     }
+
+                }
+
+                else if (milliseconds>=2800){
+                    intake2.setPower(0);
+                    intakeMotor.setPower(0);
+                }
+                else if (milliseconds>=2600){
+                    intakeMotor.setPower(1);
+                    intake2.setPower(1);
                 }
 
                 break;
             case 2:
-                if (distance<4) {
+                if (distance<0.2) {
                     intakeMotor.setPower(1);
                     follower.setMaxPowerScaling(0.3);
 

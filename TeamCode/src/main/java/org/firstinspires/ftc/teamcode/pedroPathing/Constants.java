@@ -22,6 +22,7 @@ public class Constants {
             .translationalPIDFCoefficients(new PIDFCoefficients(0.11,0,0.008,0.03))
             .headingPIDFCoefficients(new PIDFCoefficients(1,0,0,0.04))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.08,0,0.001,0.6,0.03))
+
             .centripetalScaling(0.003);
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 0.9, 1.5);
 
@@ -49,6 +50,8 @@ public static PinpointConstants localizerConstants = new PinpointConstants()
         .forwardPodY(8.202756)
         .strafePodX(8.202756)
         .distanceUnit(DistanceUnit.INCH)
+        .forwardPodY(-4)
+        .strafePodX(-6.5)
         .hardwareMapName("pinpoint") // MAKE SURE TO ADD NAME TO DRIVE HUB
         .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD) // WE ASSUME WE HAVE THIS MAY NEED TO DOUBLE CHECK
         .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
