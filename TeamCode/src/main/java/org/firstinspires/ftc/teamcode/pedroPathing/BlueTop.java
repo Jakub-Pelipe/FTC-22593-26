@@ -77,7 +77,7 @@ public class BlueTop extends OpMode {
                 pathState=1;;
                 break;
             case 1:
-                outtakeMotor.setPower(0.8);
+                outtakeMotor.setPower(0.75);
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
@@ -125,7 +125,7 @@ public class BlueTop extends OpMode {
                 }
                 break;
             case 3:
-                outtakeMotor.setPower(0.8);
+                outtakeMotor.setPower(0.75);
                 //change to open gate position
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
@@ -173,7 +173,7 @@ public class BlueTop extends OpMode {
                 }
                 break;
             case 5:
-                outtakeMotor.setPower(0.8);
+                outtakeMotor.setPower(0.75);
                 //change to open gate position
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
@@ -187,7 +187,7 @@ public class BlueTop extends OpMode {
                         kicker.setPosition(1);
                         rightBarrier.setPosition(0.1);
                         actionTimer.resetTimer();
-                        setPathState(-1);
+                        setPathState(6);
 
                     }
 
@@ -209,8 +209,8 @@ public class BlueTop extends OpMode {
                 }
                 break;
             case 6:
+                //need to go to shooting area
                 if (!follower.isBusy()) {
-                    follower.followPath(grabPickup3, true);
                     setPathState(7);
                 }
                 break;
