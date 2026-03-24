@@ -23,12 +23,12 @@ public class RedTop extends OpMode {
     private Servo rightBarrier;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
-    private final Pose startPose = new Pose(35.543, 134.752, Math.toRadians(270)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(64.613, 83.396, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose pickup1Pose = new Pose(27, 83.227, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
-    private final Pose control1=new Pose(81.340,79.914);
-    private final Pose pickup2Pose = new Pose(28.002, 59.16, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
-    private final Pose pickup3Pose = new Pose(24, 36, Math.toRadians(180)); // Lowest (Third Set) of Artifacts from the Spike Mark.
+    private final Pose startPose = new Pose(108.457, 134.752, Math.toRadians(270)); // Start Pose of our robot.
+    private final Pose scorePose = new Pose(79.387, 83.396, Math.toRadians(45)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose pickup1Pose = new Pose(117, 83.227, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
+    //private final Pose control1=new Pose(81.340,79.914);
+    private final Pose pickup2Pose = new Pose(115.998, 59.16, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.
+    private final Pose pickup3Pose = new Pose(115.966, 35.476, Math.toRadians(0)); // Lowest (Third Set) of Artifacts from the Spike Mark.
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1,grabPickup2, scorePickup2, grabPickup3, scorePickup3;
