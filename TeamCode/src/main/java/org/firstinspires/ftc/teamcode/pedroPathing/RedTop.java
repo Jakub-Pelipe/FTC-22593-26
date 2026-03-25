@@ -226,7 +226,7 @@ public class RedTop extends OpMode {
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
-                if (milliseconds>=4300){
+                if (milliseconds>=5200){
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
@@ -240,16 +240,16 @@ public class RedTop extends OpMode {
                 }
 
                 //change timing
-                else if (milliseconds>=3400){
+                else if (milliseconds>=4300){
                     intake2.setPower(1);
                     intakeMotor.setPower(-1);
                 }
 
-                else if (milliseconds>=2600){
+                else if (milliseconds>=3500){
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
                 }
-                else if (milliseconds>=2100){
+                else if (milliseconds>=3000){
                     intakeMotor.setPower(-1);
                     intake2.setPower(1);
                 }
