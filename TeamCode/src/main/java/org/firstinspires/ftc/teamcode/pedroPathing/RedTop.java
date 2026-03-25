@@ -77,7 +77,7 @@ public class RedTop extends OpMode {
                 pathState=1;;
                 break;
             case 1:
-                outtakeMotor.setPower(0.8);
+                outtakeMotor.setPower(0.7);
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
@@ -125,7 +125,7 @@ public class RedTop extends OpMode {
                 }
                 break;
             case 3:
-                outtakeMotor.setPower(0.8);
+                outtakeMotor.setPower(0.7);
                 //change to open gate position
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
@@ -173,7 +173,7 @@ public class RedTop extends OpMode {
                 }
                 break;
             case 5:
-                outtakeMotor.setPower(0.8);
+                outtakeMotor.setPower(0.7);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -222,7 +222,7 @@ public class RedTop extends OpMode {
                 }
                 break;
             case 7:
-                outtakeMotor.setPower(0.8);
+                outtakeMotor.setPower(0.7);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
