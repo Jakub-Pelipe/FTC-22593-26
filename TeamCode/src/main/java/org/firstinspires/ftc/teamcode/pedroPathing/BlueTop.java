@@ -235,6 +235,7 @@ public class BlueTop extends OpMode {
                         kicker.setPosition(0.6);
                         rightBarrier.setPosition(0.2);
                         actionTimer.resetTimer();
+                        intakeMotor.setPower(0);
                         setPathState(-1);
 
                     }

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
@@ -23,12 +24,13 @@ public class RedTop extends OpMode {
     private Servo rightBarrier;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
-    private final Pose startPose = new Pose(109.457, 134.752, Math.toRadians(270)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(80.387, 83.396, Math.toRadians(45)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose pickup1Pose = new Pose(122.6, 83.227, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
-    //private final Pose control1=new Pose(81.340,79.914);
-    private final Pose pickup2Pose = new Pose(122.6, 59.16, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.
-    private final Pose pickup3Pose = new Pose(122.6, 35.476, Math.toRadians(0)); // Lowest (Third Set) of Artifacts from the Spike Mark.
+    private final Pose startPose = new Pose(34.543, 134.752, Math.toRadians(270)); // Start Pose of our robot.
+    private final Pose scorePose = new Pose(63.613, 83.396, Math.toRadians(140)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose pickup1Pose = new Pose(17.4, 85.029, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
+    private final Pose control1=new Pose(68.465,57.191);
+    private final Pose control2=new Pose(75.685,31.519);
+    private final Pose pickup2Pose = new Pose(15.4, 62.561, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
+    private final Pose pickup3Pose = new Pose(15.4, 35.304, Math.toRadians(180)); // Lowest (Third Set) of Artifacts from the Spike Mark.
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1,grabPickup2, scorePickup2, grabPickup3, scorePickup3;
@@ -49,7 +51,7 @@ public class RedTop extends OpMode {
                 .build();
 
         grabPickup2 = follower.pathBuilder()
-                .addPath(new BezierLine(scorePose, pickup2Pose))
+                .addPath(new BezierCurve(scorePose,control1, pickup2Pose))
                 .setTangentHeadingInterpolation()
                 .build();
 
@@ -59,7 +61,7 @@ public class RedTop extends OpMode {
                 .build();
 
         grabPickup3 = follower.pathBuilder()
-                .addPath(new BezierLine(scorePose, pickup3Pose))
+                .addPath(new BezierCurve(scorePose,control2, pickup3Pose))
                 .setTangentHeadingInterpolation()
                 .build();
 
@@ -100,7 +102,7 @@ public class RedTop extends OpMode {
                     intakeMotor.setPower(-1);
                 }
 
-                else if (milliseconds>=4000){
+                else if (milliseconds>=3600){
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
                 }
@@ -111,9 +113,9 @@ public class RedTop extends OpMode {
 
                 break;
             case 2:
-                if (distance<=25) {
+                if (distance<=35) {
                     intakeMotor.setPower(-1);
-                    follower.setMaxPowerScaling(0.25);
+                    follower.setMaxPowerScaling(0.35);
 
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup1, true);
@@ -126,7 +128,6 @@ public class RedTop extends OpMode {
                 break;
             case 3:
                 outtakeMotor.setPower(0.7);
-                //change to open gate position
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -144,12 +145,12 @@ public class RedTop extends OpMode {
 
                 }
 
-                else if (milliseconds>=3400){
+                else if (milliseconds>=3600){
                     intake2.setPower(1);
                     intakeMotor.setPower(-1);
                 }
 
-                else if (milliseconds>=2600){
+                else if (milliseconds>=2500){
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
                 }
@@ -158,10 +159,11 @@ public class RedTop extends OpMode {
                     intake2.setPower(1);
                 }
                 break;
+
             case 4:
-                if (distance<=25) {
+                if (distance<=35) {
                     intakeMotor.setPower(-1);
-                    follower.setMaxPowerScaling(0.25);
+                    follower.setMaxPowerScaling(0.35);
 
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup2, true);
@@ -197,7 +199,7 @@ public class RedTop extends OpMode {
                     intakeMotor.setPower(-1);
                 }
                 //change timing
-                else if (milliseconds>=3400){
+                else if (milliseconds>=3200){
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
                 }
@@ -208,9 +210,9 @@ public class RedTop extends OpMode {
                 }
                 break;
             case 6:
-                if (distance<=25) {
+                if (distance<=35) {
                     intakeMotor.setPower(-1);
-                    follower.setMaxPowerScaling(0.25);
+                    follower.setMaxPowerScaling(0.35);
 
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup3, true);
@@ -233,6 +235,7 @@ public class RedTop extends OpMode {
                         kicker.setPosition(0.6);
                         rightBarrier.setPosition(0.2);
                         actionTimer.resetTimer();
+                        intakeMotor.setPower(0);
                         setPathState(-1);
 
                     }
@@ -305,7 +308,7 @@ public class RedTop extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
-        
+
     }
 
     /**
