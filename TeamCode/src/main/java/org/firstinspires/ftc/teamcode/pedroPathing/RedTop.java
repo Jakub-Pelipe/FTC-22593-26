@@ -174,7 +174,6 @@ public class RedTop extends OpMode {
                 break;
             case 5:
                 outtakeMotor.setPower(0.75);
-                //change to open gate position
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -209,14 +208,50 @@ public class RedTop extends OpMode {
                 }
                 break;
             case 6:
-                //need to go to shooting area
-                if (!follower.isBusy()) {
-                    setPathState(7);
+                if (distance<=25) {
+                    intakeMotor.setPower(-1);
+                    follower.setMaxPowerScaling(0.25);
+
+                    if (!follower.isBusy()) {
+                        follower.followPath(scorePickup3, true);
+                        intakeMotor.setPower(0);
+                        follower.setMaxPowerScaling((1));
+                        actionTimer.resetTimer();
+                        setPathState(7);
+                    }
                 }
                 break;
             case 7:
-                if (!follower.isBusy()) {
-                    setPathState(-1);
+                outtakeMotor.setPower(0.75);
+                rightBarrier.setPosition(0.6);
+                kicker.setPosition(0);
+
+                if (milliseconds>=4300){
+                    outtakeMotor.setPower(0);
+                    intake2.setPower(0);
+                    if (!follower.isBusy()) {
+                        kicker.setPosition(1);
+                        rightBarrier.setPosition(0.1);
+                        actionTimer.resetTimer();
+                        setPathState(-1);
+
+                    }
+
+                }
+
+                //change timing
+                else if (milliseconds>=3400){
+                    intake2.setPower(1);
+                    intakeMotor.setPower(-1);
+                }
+
+                else if (milliseconds>=2600){
+                    intake2.setPower(0);
+                    intakeMotor.setPower(0);
+                }
+                else if (milliseconds>=2100){
+                    intakeMotor.setPower(-1);
+                    intake2.setPower(1);
                 }
                 break;
         }
