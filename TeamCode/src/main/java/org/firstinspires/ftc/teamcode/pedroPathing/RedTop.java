@@ -23,12 +23,12 @@ public class RedTop extends OpMode {
     private Servo rightBarrier;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
-    private final Pose startPose = new Pose(108.457, 134.752, Math.toRadians(270)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(79.387, 83.396, Math.toRadians(45)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose pickup1Pose = new Pose(117, 83.227, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
+    private final Pose startPose = new Pose(109.457, 134.752, Math.toRadians(270)); // Start Pose of our robot.
+    private final Pose scorePose = new Pose(80.387, 83.396, Math.toRadians(45)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose pickup1Pose = new Pose(122.6, 83.227, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
     //private final Pose control1=new Pose(81.340,79.914);
-    private final Pose pickup2Pose = new Pose(115.998, 59.16, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.
-    private final Pose pickup3Pose = new Pose(115.966, 35.476, Math.toRadians(0)); // Lowest (Third Set) of Artifacts from the Spike Mark.
+    private final Pose pickup2Pose = new Pose(122.6, 59.16, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.
+    private final Pose pickup3Pose = new Pose(122.6, 35.476, Math.toRadians(0)); // Lowest (Third Set) of Artifacts from the Spike Mark.
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1,grabPickup2, scorePickup2, grabPickup3, scorePickup3;
@@ -77,7 +77,7 @@ public class RedTop extends OpMode {
                 pathState=1;;
                 break;
             case 1:
-                outtakeMotor.setPower(0.75);
+                outtakeMotor.setPower(0.8);
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
@@ -86,8 +86,8 @@ public class RedTop extends OpMode {
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
                         follower.followPath(grabPickup1, true);
-                        kicker.setPosition(1);
-                        rightBarrier.setPosition(0.1);
+                        kicker.setPosition(0.6);
+                        rightBarrier.setPosition(0.2);
                         actionTimer.resetTimer();
                         setPathState(2);
 
@@ -125,7 +125,7 @@ public class RedTop extends OpMode {
                 }
                 break;
             case 3:
-                outtakeMotor.setPower(0.75);
+                outtakeMotor.setPower(0.8);
                 //change to open gate position
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
@@ -135,8 +135,8 @@ public class RedTop extends OpMode {
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
                         follower.followPath(grabPickup2, true);
-                        kicker.setPosition(1);
-                        rightBarrier.setPosition(0.1);
+                        kicker.setPosition(0.6);
+                        rightBarrier.setPosition(0.2);
                         actionTimer.resetTimer();
                         setPathState(4);
 
@@ -173,7 +173,7 @@ public class RedTop extends OpMode {
                 }
                 break;
             case 5:
-                outtakeMotor.setPower(0.75);
+                outtakeMotor.setPower(0.8);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -183,8 +183,8 @@ public class RedTop extends OpMode {
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
                         follower.followPath(grabPickup3, true);
-                        kicker.setPosition(1);
-                        rightBarrier.setPosition(0.1);
+                        kicker.setPosition(0.6);
+                        rightBarrier.setPosition(0.2);
                         actionTimer.resetTimer();
                         setPathState(6);
 
@@ -222,7 +222,7 @@ public class RedTop extends OpMode {
                 }
                 break;
             case 7:
-                outtakeMotor.setPower(0.75);
+                outtakeMotor.setPower(0.8);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -230,8 +230,8 @@ public class RedTop extends OpMode {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
-                        kicker.setPosition(1);
-                        rightBarrier.setPosition(0.1);
+                        kicker.setPosition(0.6);
+                        rightBarrier.setPosition(0.2);
                         actionTimer.resetTimer();
                         setPathState(-1);
 
