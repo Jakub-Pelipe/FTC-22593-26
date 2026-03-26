@@ -83,7 +83,7 @@ public class BlueTop extends OpMode {
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
-                if (milliseconds>=5000){
+                if (milliseconds>=5300){
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
@@ -102,7 +102,7 @@ public class BlueTop extends OpMode {
                     intakeMotor.setPower(-1);
                 }
 
-                else if (milliseconds>=3600){
+                else if (milliseconds>=3800){
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
                 }
@@ -180,7 +180,7 @@ public class BlueTop extends OpMode {
                 kicker.setPosition(0);
 
                 //change timing
-                if (milliseconds>=4600){
+                if (milliseconds>=5100){
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
@@ -243,12 +243,12 @@ public class BlueTop extends OpMode {
                 }
 
                //change timing
-                else if (milliseconds>=4300){
+                else if (milliseconds>=4400){
                     intake2.setPower(1);
                     intakeMotor.setPower(-1);
                 }
 
-                else if (milliseconds>=3500){
+                else if (milliseconds>=3800){
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
                 }
