@@ -24,13 +24,13 @@ public class RedTop2 extends OpMode {
     private Servo rightBarrier;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
-    private final Pose startPose = new Pose(109.543, 134.752, Math.toRadians(270)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(80.387, 83.396, Math.toRadians(50)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose pickup1Pose = new Pose(127.6, 85.029, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
+    private final Pose startPose = new Pose(133.752, 134.543, Math.toRadians(270)); // Start Pose of our robot.
+    private final Pose scorePose = new Pose(92, 91.396, Math.toRadians(40)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose pickup1Pose = new Pose(140.6, 97.029, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
     private final Pose control1=new Pose(68.465,57.191);
-    private final Pose control2=new Pose(75.685,31.519);
-    private final Pose pickup2Pose = new Pose(129.6, 59.761, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.  FIXED POSE 2 WITH VIZ NORM = 129.6 60.561
-    private final Pose pickup3Pose = new Pose(129.6, 35.304, Math.toRadians(0)); // Lowest (Third Set) of Artifacts from the Spike Mark.
+    private final Pose control2=new Pose(75.685,43.519);
+    private final Pose pickup2Pose = new Pose(145.6, 71.761, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.  FIXED POSE 2 WITH VIZ NORM = 129.6 60.561
+    private final Pose pickup3Pose = new Pose(129.6, 27.304, Math.toRadians(0)); // Lowest (Third Set) of Artifacts from the Spike Mark.
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1,grabPickup2, scorePickup2, grabPickup3, scorePickup3;
@@ -79,11 +79,11 @@ public class RedTop2 extends OpMode {
                 pathState=1;;
                 break;
             case 1:
-                outtakeMotor.setPower(0.7);
+                outtakeMotor.setPower(0.65);
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
-                if (milliseconds>=5300){
+                if (milliseconds>=5500){
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
@@ -97,7 +97,7 @@ public class RedTop2 extends OpMode {
 
                 }
 
-                else if (milliseconds>=4500){
+                else if (milliseconds>=5000){
                     intake2.setPower(1);
                     intakeMotor.setPower(-1);
                 }
@@ -115,7 +115,7 @@ public class RedTop2 extends OpMode {
             case 2:
                 if (distance<=35) {
                     intakeMotor.setPower(-1);
-                    follower.setMaxPowerScaling(0.35);
+                    follower.setMaxPowerScaling(0.25);
 
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup1, true);

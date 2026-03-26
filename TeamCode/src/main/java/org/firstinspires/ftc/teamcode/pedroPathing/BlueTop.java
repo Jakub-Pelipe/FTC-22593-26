@@ -28,7 +28,7 @@ public class BlueTop extends OpMode {
     private final Pose scorePose = new Pose(63.613, 83.396, Math.toRadians(140)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
     private final Pose pickup1Pose = new Pose(16.4, 85.029, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
     private final Pose control1=new Pose(68.465,57.191);
-    private final Pose control2=new Pose(75.685,31.519);
+    private final Pose control2=new Pose(77.685,30.519);
     private final Pose pickup2Pose = new Pose(14.4, 60.561, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
     private final Pose pickup3Pose = new Pose(14.4, 35.304, Math.toRadians(180)); // Lowest (Third Set) of Artifacts from the Spike Mark.
 
