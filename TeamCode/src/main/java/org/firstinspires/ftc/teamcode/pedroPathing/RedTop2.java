@@ -79,7 +79,7 @@ public class RedTop2 extends OpMode {
                 pathState=1;;
                 break;
             case 1:
-                outtakeMotor.setPower(0.65);
+                outtakeMotor.setPower(0.6);
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
@@ -127,7 +127,7 @@ public class RedTop2 extends OpMode {
                 }
                 break;
             case 3:
-                outtakeMotor.setPower(0.7);
+                outtakeMotor.setPower(0.6);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -175,7 +175,7 @@ public class RedTop2 extends OpMode {
                 }
                 break;
             case 5:
-                outtakeMotor.setPower(0.7);
+                outtakeMotor.setPower(0.6);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 

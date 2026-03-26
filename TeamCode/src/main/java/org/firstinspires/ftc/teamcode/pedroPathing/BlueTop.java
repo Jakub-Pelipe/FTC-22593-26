@@ -79,11 +79,11 @@ public class BlueTop extends OpMode {
                 pathState=1;;
                 break;
             case 1:
-                outtakeMotor.setPower(0.7);
+                outtakeMotor.setPower(0.65);
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
-                if (milliseconds>=5300){
+                if (milliseconds>=5500){
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
@@ -97,7 +97,7 @@ public class BlueTop extends OpMode {
 
                 }
 
-                else if (milliseconds>=4500){
+                else if (milliseconds>=5000){
                     intake2.setPower(1);
                     intakeMotor.setPower(-1);
                 }
@@ -127,7 +127,7 @@ public class BlueTop extends OpMode {
                 }
                 break;
             case 3:
-                outtakeMotor.setPower(0.7);
+                outtakeMotor.setPower(0.65);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -175,7 +175,7 @@ public class BlueTop extends OpMode {
                 }
                 break;
             case 5:
-                outtakeMotor.setPower(0.7);
+                outtakeMotor.setPower(0.65);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -224,7 +224,7 @@ public class BlueTop extends OpMode {
                 }
                 break;
             case 7:
-                outtakeMotor.setPower(0.7);
+                outtakeMotor.setPower(0.65);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
