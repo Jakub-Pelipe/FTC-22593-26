@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous (name="BlueTop", group = "Autonomous")
+@Autonomous (name="RedTop2", group = "Autonomous")
 public class RedTop2 extends OpMode {
     private Follower follower;
     public double milliseconds;
