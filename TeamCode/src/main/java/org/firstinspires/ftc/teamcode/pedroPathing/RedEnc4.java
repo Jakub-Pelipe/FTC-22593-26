@@ -27,18 +27,20 @@ public class RedEnc4 extends OpMode {
     private Servo rightBarrier;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
+    private boolean isStopped = false;  // flag for hard cutoff
 
     // REV Core Hex Motor specifications
     private final double OUTTAKE_TARGET_VELOCITY = 30; // ticks/sec
+    private final double OUTTAKE_HOLD_POWER = 0.65;
 
     private final Pose startPose = new Pose(133.752, 134.543, Math.toRadians(270));
-    private final Pose scorePose = new Pose(92, 91.396, Math.toRadians(40));
+    private final Pose scorePose = new Pose(112, 111.396, Math.toRadians(40));
     private final Pose pickup1Pose = new Pose(140.6, 97.029, Math.toRadians(0));
     private final Pose control1 = new Pose(68.465, 57.191);
     private final Pose control2 = new Pose(75.685, 43.519);
     private final Pose pickup2Pose = new Pose(145.6, 71.761, Math.toRadians(0));
-    private final Pose pickup3Pose = new Pose(144.6, 41.304, Math.toRadians(0));
-    private final Pose finalPose = new Pose(140, 41, Math.toRadians(0)); // final position
+    private final Pose pickup3Pose = new Pose(129.6, 27.304, Math.toRadians(0));
+    private final Pose finalPose = new Pose(99, 81, Math.toRadians(0)); // final position
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
@@ -83,10 +85,9 @@ public class RedEnc4 extends OpMode {
     }
 
     public void autonomousPathUpdate() {
-        // Precompute speed condition once
-        boolean motorAtSpeed = TPS >= OUTTAKE_TARGET_VELOCITY * 0.65;
+        // If stopped, do nothing
+        if (isStopped) return;
 
-        double OUTTAKE_HOLD_POWER = 0.65;
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload);
@@ -95,11 +96,15 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 1:
+                // --- Score preload ---
+                double threshold1 = 0.42; // adjust as needed
+                boolean motorAtSpeed1 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold1;
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
+                follower.setMaxPowerScaling(0.8);
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
-                if (milliseconds >= 5500 && motorAtSpeed) {
+                if (milliseconds >= 5500 && motorAtSpeed1) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
@@ -109,13 +114,13 @@ public class RedEnc4 extends OpMode {
                         actionTimer.resetTimer();
                         setPathState(2);
                     }
-                } else if (milliseconds >= 5000 && motorAtSpeed) {
+                } else if (milliseconds >= 5000 && motorAtSpeed1) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 } else if (milliseconds >= 3800) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 3100 && motorAtSpeed) {
+                } else if (milliseconds >= 3100 && motorAtSpeed1) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 }
@@ -136,11 +141,15 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 3:
+                // --- Score first pickup ---
+                double threshold2 = 0.37; // adjust as needed
+                boolean motorAtSpeed2 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold2;
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
+                follower.setMaxPowerScaling(0.8);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
-                if (milliseconds >= 4600 && motorAtSpeed) {
+                if (milliseconds >= 4600 && motorAtSpeed2) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
@@ -150,13 +159,13 @@ public class RedEnc4 extends OpMode {
                         actionTimer.resetTimer();
                         setPathState(4);
                     }
-                } else if (milliseconds >= 3600 && motorAtSpeed) {
+                } else if (milliseconds >= 3600 && motorAtSpeed2) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 } else if (milliseconds >= 2500) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 2100 && motorAtSpeed) {
+                } else if (milliseconds >= 2100 && motorAtSpeed2) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 }
@@ -178,12 +187,15 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 5:
+                // --- Score second pickup ---
+                double threshold3 = 0.28; // adjust as needed
+                boolean motorAtSpeed3 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold3;
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
+                follower.setMaxPowerScaling(0.8);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
-                // Use both speed condition and a timeout to guarantee progression
-                boolean proceed = (milliseconds >= 5100 && motorAtSpeed) || (milliseconds >= 6000);
+                boolean proceed = (milliseconds >= 5100 && motorAtSpeed3) || (milliseconds >= 6000);
                 if (proceed) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
@@ -194,13 +206,13 @@ public class RedEnc4 extends OpMode {
                         actionTimer.resetTimer();
                         setPathState(6);
                     }
-                } else if (milliseconds >= 4200 && motorAtSpeed) {
+                } else if (milliseconds >= 4200 && motorAtSpeed3) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 } else if (milliseconds >= 3200) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 2500 && motorAtSpeed) {
+                } else if (milliseconds >= 2500 && motorAtSpeed3) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 }
@@ -221,11 +233,14 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 7:
+                // --- Score third pickup ---
+                double threshold4 = 0.35; // adjust as needed
+                boolean motorAtSpeed4 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold4;
                 outtakeMotor.setPower(0.7);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
-                proceed = (milliseconds >= 5200 && motorAtSpeed) || (milliseconds >= 6200);
+                proceed = (milliseconds >= 5200 && motorAtSpeed4) || (milliseconds >= 6200);
                 if (proceed) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
@@ -237,13 +252,13 @@ public class RedEnc4 extends OpMode {
                         // Instead of ending, move to final position
                         setPathState(8);
                     }
-                } else if (milliseconds >= 4400 && motorAtSpeed) {
+                } else if (milliseconds >= 4400 && motorAtSpeed4) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 } else if (milliseconds >= 3800) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 3000 && motorAtSpeed) {
+                } else if (milliseconds >= 3000 && motorAtSpeed4) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 }
@@ -267,6 +282,24 @@ public class RedEnc4 extends OpMode {
 
     @Override
     public void loop() {
+        // Hard cutoff at 29.5 seconds
+        if (!isStopped && opmodeTimer.getElapsedTime() >= 29500) {
+            isStopped = true;
+            // Stop all motors
+            if (outtakeMotor != null) outtakeMotor.setPower(0);
+            if (intakeMotor != null) intakeMotor.setPower(0);
+            if (intake2 != null) intake2.setPower(0);
+            pathState = -1;
+        }
+
+        // If stopped, just show cutoff message
+        if (isStopped) {
+            telemetry.addData("Status", "CUTOFF - Time limit reached");
+            telemetry.addData("Runtime (ms)", opmodeTimer.getElapsedTime());
+            telemetry.update();
+            return;
+        }
+
         milliseconds = actionTimer.getElapsedTime();
         distance = follower.getDistanceRemaining();
 
@@ -284,6 +317,7 @@ public class RedEnc4 extends OpMode {
         telemetry.addData("Outtake TPS", TPS);
         telemetry.addData("Outtake Target", OUTTAKE_TARGET_VELOCITY);
         telemetry.addData("TPS %", (TPS / OUTTAKE_TARGET_VELOCITY) * 100);
+        telemetry.addData("Runtime (ms)", opmodeTimer.getElapsedTime());
         telemetry.update();
     }
 
@@ -307,11 +341,9 @@ public class RedEnc4 extends OpMode {
         outtakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Important: No setVelocity or setPower here – motor stays off until needed
 
-        // Configure intake motors
-        // intakeMotor: inverted direction (REVERSE) so positive power runs it inward
+        // Configure intake motors – use REVERSE so positive power runs inward
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        // intake2: keep as FORWARD (adjust if needed later)
         intake2.setDirection(DcMotorSimple.Direction.FORWARD);
         intake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
@@ -331,6 +363,7 @@ public class RedEnc4 extends OpMode {
         opmodeTimer.resetTimer();
         pathTimer.resetTimer();
         actionTimer.resetTimer();
+        isStopped = false;
         setPathState(0);
     }
 

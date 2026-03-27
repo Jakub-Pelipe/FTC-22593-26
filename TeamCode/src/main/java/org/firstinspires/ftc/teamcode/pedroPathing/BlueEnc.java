@@ -35,17 +35,16 @@ public class BlueEnc extends OpMode {
 
     private final Pose startPose = new Pose(34.543, 134.752, Math.toRadians(270));
     private final Pose scorePose = new Pose(47.0, 82.996, Math.toRadians(130));
-    private final Pose pickup1Pose = new Pose(19.9, 85.029, Math.toRadians(180));
+    private final Pose pickup1Pose = new Pose(15.9, 85.029, Math.toRadians(180));
     private final Pose control1 = new Pose(68.465, 57.191);
     private final Pose control2 = new Pose(77.685, 30.519);
     private final Pose pickup2Pose = new Pose(14.4, 60.561, Math.toRadians(180));
-    private final Pose pickup3Pose = new Pose(14.4, 34.8, Math.toRadians(179));
+    private final Pose pickup3Pose = new Pose(14.4, 34.2, Math.toRadians(179));
     private final Pose finalPose = new Pose(45, 81, Math.toRadians(180)); // final position
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
     private Path moveToFinal;
-    //e
 
     public void buildPaths() {
         scorePreload = new Path(new BezierLine(startPose, scorePose));
