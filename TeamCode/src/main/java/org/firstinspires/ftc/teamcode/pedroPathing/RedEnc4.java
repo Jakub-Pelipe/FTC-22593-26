@@ -38,9 +38,11 @@ public class RedEnc4 extends OpMode {
     private final Pose control2 = new Pose(75.685, 43.519);
     private final Pose pickup2Pose = new Pose(145.6, 71.761, Math.toRadians(0));
     private final Pose pickup3Pose = new Pose(144.6, 41.304, Math.toRadians(0));
+    private final Pose finalPose = new Pose(140, 41, Math.toRadians(0)); // final position
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
+    private Path moveToFinal;
 
     public void buildPaths() {
         scorePreload = new Path(new BezierLine(startPose, scorePose));
@@ -75,6 +77,9 @@ public class RedEnc4 extends OpMode {
                 .addPath(new BezierLine(pickup3Pose, scorePose))
                 .setLinearHeadingInterpolation(pickup3Pose.getHeading(), scorePose.getHeading())
                 .build();
+
+        moveToFinal = new Path(new BezierLine(scorePose, finalPose));
+        moveToFinal.setLinearHeadingInterpolation(scorePose.getHeading(), finalPose.getHeading());
     }
 
     public void autonomousPathUpdate() {
@@ -229,7 +234,8 @@ public class RedEnc4 extends OpMode {
                         rightBarrier.setPosition(0.2);
                         actionTimer.resetTimer();
                         intakeMotor.setPower(0);
-                        setPathState(-1);
+                        // Instead of ending, move to final position
+                        setPathState(8);
                     }
                 } else if (milliseconds >= 4400 && motorAtSpeed) {
                     intakeMotor.setPower(1);
@@ -240,6 +246,15 @@ public class RedEnc4 extends OpMode {
                 } else if (milliseconds >= 3000 && motorAtSpeed) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
+                }
+                break;
+
+            case 8:
+                // Move to final position (140,41)
+                follower.followPath(moveToFinal);
+                // Wait until robot reaches the target or time out
+                if (!follower.isBusy() || milliseconds >= 5000) {
+                    setPathState(-1);
                 }
                 break;
         }

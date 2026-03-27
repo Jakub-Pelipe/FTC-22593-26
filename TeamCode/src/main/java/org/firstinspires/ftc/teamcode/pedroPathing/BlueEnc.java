@@ -27,19 +27,20 @@ public class BlueEnc extends OpMode {
     private Servo rightBarrier;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
+    private boolean isStopped = false;  // flag to indicate if cutoff has triggered
 
     // REV Core Hex Motor specifications
     private final double OUTTAKE_TARGET_VELOCITY = 30; // ticks/sec (adjust as needed)
     private final double OUTTAKE_HOLD_POWER = 0.65;
 
     private final Pose startPose = new Pose(34.543, 134.752, Math.toRadians(270));
-    private final Pose scorePose = new Pose(52.513, 82.996, Math.toRadians(130));
+    private final Pose scorePose = new Pose(47.0, 82.996, Math.toRadians(130));
     private final Pose pickup1Pose = new Pose(20.4, 85.029, Math.toRadians(180));
     private final Pose control1 = new Pose(68.465, 57.191);
     private final Pose control2 = new Pose(77.685, 30.519);
-    private final Pose pickup2Pose = new Pose(13.4, 60.561, Math.toRadians(180));
-    private final Pose pickup3Pose = new Pose(14.4, 33.604, Math.toRadians(180));
-    private final Pose finalPose = new Pose(30, 35, Math.toRadians(0)); // final position
+    private final Pose pickup2Pose = new Pose(14.4, 60.561, Math.toRadians(180));
+    private final Pose pickup3Pose = new Pose(14.4, 33.604, Math.toRadians(179));
+    private final Pose finalPose = new Pose(45, 81, Math.toRadians(180)); // final position
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
@@ -84,8 +85,8 @@ public class BlueEnc extends OpMode {
     }
 
     public void autonomousPathUpdate() {
-        // Precompute speed condition once (but we'll use per-case thresholds)
-        // Instead, we'll compute motorAtSpeed with a different multiplier for each scoring case.
+        // If stopped, do nothing
+        if (isStopped) return;
 
         switch (pathState) {
             case 0:
@@ -129,7 +130,7 @@ public class BlueEnc extends OpMode {
                 // Grab first pickup
                 if (distance <= 35) {
                     intakeMotor.setPower(1);
-                    follower.setMaxPowerScaling(0.25);
+                    follower.setMaxPowerScaling(0.35);
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup1, true);
                         intakeMotor.setPower(0);
@@ -188,7 +189,7 @@ public class BlueEnc extends OpMode {
 
             case 5:
                 // --- Score second pickup ---
-                double threshold3 = 0.35; // adjust as needed
+                double threshold3 = 0.28; // adjust as needed
                 boolean motorAtSpeed3 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold3;
                 outtakeMotor.setPower(getOuttakeHoldPower());
                 follower.setMaxPowerScaling(0.8);
@@ -266,8 +267,9 @@ public class BlueEnc extends OpMode {
                 break;
 
             case 8:
-                // Move to final position (15,33)
+                // Move to final position (45,81)
                 follower.followPath(moveToFinal);
+                follower.setMaxPowerScaling(0.85);
                 // Wait until robot reaches the target or time out
                 if (!follower.isBusy() || milliseconds >= 5000) {
                     setPathState(-1);
@@ -287,6 +289,26 @@ public class BlueEnc extends OpMode {
 
     @Override
     public void loop() {
+        // Check for hard cutoff at 29.5 seconds
+        if (!isStopped && opmodeTimer.getElapsedTime() >= 29500) {
+            // Stop everything
+            isStopped = true;
+            // Stop all motors
+            if (outtakeMotor != null) outtakeMotor.setPower(0);
+            if (intakeMotor != null) intakeMotor.setPower(0);
+            if (intake2 != null) intake2.setPower(0);
+            // Optionally, set pathState to -1 to prevent further updates
+            pathState = -1;
+        }
+
+        // If stopped, skip all updates and just show telemetry
+        if (isStopped) {
+            telemetry.addData("Status", "CUTOFF - Time limit reached");
+            telemetry.addData("Runtime (ms)", opmodeTimer.getElapsedTime());
+            telemetry.update();
+            return;
+        }
+
         milliseconds = actionTimer.getElapsedTime();
         distance = follower.getDistanceRemaining();
 
@@ -304,6 +326,7 @@ public class BlueEnc extends OpMode {
         telemetry.addData("Outtake TPS", TPS);
         telemetry.addData("Outtake Target", OUTTAKE_TARGET_VELOCITY);
         telemetry.addData("TPS %", (TPS / OUTTAKE_TARGET_VELOCITY) * 100);
+        telemetry.addData("Runtime (ms)", opmodeTimer.getElapsedTime());
         telemetry.update();
     }
 
@@ -349,6 +372,7 @@ public class BlueEnc extends OpMode {
         opmodeTimer.resetTimer();
         pathTimer.resetTimer();
         actionTimer.resetTimer();
+        isStopped = false;
         setPathState(0);
     }
 
