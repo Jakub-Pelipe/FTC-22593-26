@@ -33,15 +33,14 @@ public class RedEnc4 extends OpMode {
     private final double OUTTAKE_TARGET_VELOCITY = 30; // ticks/sec
     private final double OUTTAKE_HOLD_POWER = 0.65;
 
-    private final Pose startPose = new Pose(133.752, 134.543, Math.toRadians(270));
-    private final Pose scorePose = new Pose(112, 95.396, Math.toRadians(40));
+    private final Pose startPose = new Pose(133.752, 134.752, Math.toRadians(270));
+    private final Pose scorePose = new Pose(119, 94.396, Math.toRadians(40));
     private final Pose pickup1Pose = new Pose(140.6, 97.029, Math.toRadians(0));
-    // Control points for leftward curves (staying on red side)
-    private final Pose control1 = new Pose(120, 95, Math.toRadians(0));      // left curve to pickup2
-    private final Pose control2 = new Pose(115, 70, Math.toRadians(0));      // left curve to pickup3
-    private final Pose pickup2Pose = new Pose(145.6, 75.761, Math.toRadians(90));
-    private final Pose pickup3Pose = new Pose(139.6, 35.304, Math.toRadians(90));
-    private final Pose finalPose = new Pose(99, 81, Math.toRadians(0)); // final position
+    private final Pose control1 = new Pose(73.465, 57.191 , Math.toRadians(0));
+    private final Pose control2 = new Pose(85.685, 43.519);
+    private final Pose pickup2Pose = new Pose(148.6, 71.761, Math.toRadians(0));
+    private final Pose pickup3Pose = new Pose(148.6, 41.761, Math.toRadians(0));
+    private final Pose finalPose = new Pose(140, 81, Math.toRadians(0)); // final position
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;

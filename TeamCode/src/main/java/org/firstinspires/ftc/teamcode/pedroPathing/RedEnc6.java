@@ -39,7 +39,7 @@ public class RedEnc6 extends OpMode {
     private final Pose control1 = new Pose(68.465, 57.191);
     private final Pose control2 = new Pose(75.685, 43.519);
     private final Pose pickup2Pose = new Pose(148.6, 71.761, Math.toRadians(0));
-    private final Pose pickup3Pose = new Pose(144.6, 41.761, Math.toRadians(0));
+    private final Pose pickup3Pose = new Pose(148.6, 41.761, Math.toRadians(0));
     private final Pose finalPose = new Pose(140, 81, Math.toRadians(0)); // final position
 
     private Path scorePreload;
