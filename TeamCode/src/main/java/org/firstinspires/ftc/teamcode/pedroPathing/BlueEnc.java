@@ -45,6 +45,7 @@ public class BlueEnc extends OpMode {
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
     private Path moveToFinal;
+    //e
 
     public void buildPaths() {
         scorePreload = new Path(new BezierLine(startPose, scorePose));
