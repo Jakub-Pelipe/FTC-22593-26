@@ -14,8 +14,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "RedEnc4", group = "Autonomous")
-public class RedEnc4 extends OpMode {
+@Autonomous(name = "RedEnc6", group = "Autonomous")
+public class RedEnc6 extends OpMode {
     public double TPS;
     private Follower follower;
     public double milliseconds;
@@ -33,15 +33,14 @@ public class RedEnc4 extends OpMode {
     private final double OUTTAKE_TARGET_VELOCITY = 30; // ticks/sec
     private final double OUTTAKE_HOLD_POWER = 0.65;
 
-    private final Pose startPose = new Pose(133.752, 134.543, Math.toRadians(270));
-    private final Pose scorePose = new Pose(112, 95.396, Math.toRadians(40));
+    private final Pose startPose = new Pose(133.752, 134.752, Math.toRadians(270));
+    private final Pose scorePose = new Pose(119, 94.396, Math.toRadians(40));
     private final Pose pickup1Pose = new Pose(140.6, 97.029, Math.toRadians(0));
-    // Control points for leftward curves (staying on red side)
-    private final Pose control1 = new Pose(120, 95, Math.toRadians(0));      // left curve to pickup2
-    private final Pose control2 = new Pose(115, 70, Math.toRadians(0));      // left curve to pickup3
-    private final Pose pickup2Pose = new Pose(145.6, 75.761, Math.toRadians(90));
-    private final Pose pickup3Pose = new Pose(139.6, 35.304, Math.toRadians(90));
-    private final Pose finalPose = new Pose(99, 81, Math.toRadians(0)); // final position
+    private final Pose control1 = new Pose(68.465, 57.191);
+    private final Pose control2 = new Pose(75.685, 43.519);
+    private final Pose pickup2Pose = new Pose(148.6, 71.761, Math.toRadians(0));
+    private final Pose pickup3Pose = new Pose(144.6, 41.761, Math.toRadians(0));
+    private final Pose finalPose = new Pose(140, 81, Math.toRadians(0)); // final position
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
@@ -51,7 +50,6 @@ public class RedEnc4 extends OpMode {
         scorePreload = new Path(new BezierLine(startPose, scorePose));
         scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
 
-        // First pickup (straight line)
         grabPickup1 = follower.pathBuilder()
                 .addPath(new BezierLine(scorePose, pickup1Pose))
                 .setTangentHeadingInterpolation()
@@ -62,7 +60,6 @@ public class RedEnc4 extends OpMode {
                 .setLinearHeadingInterpolation(pickup1Pose.getHeading(), scorePose.getHeading())
                 .build();
 
-        // Second pickup – BezierCurve with leftward control point
         grabPickup2 = follower.pathBuilder()
                 .addPath(new BezierCurve(scorePose, control1, pickup2Pose))
                 .setTangentHeadingInterpolation()
@@ -73,7 +70,6 @@ public class RedEnc4 extends OpMode {
                 .setLinearHeadingInterpolation(pickup2Pose.getHeading(), scorePose.getHeading())
                 .build();
 
-        // Third pickup – BezierCurve with leftward control point
         grabPickup3 = follower.pathBuilder()
                 .addPath(new BezierCurve(scorePose, control2, pickup3Pose))
                 .setTangentHeadingInterpolation()
@@ -89,6 +85,7 @@ public class RedEnc4 extends OpMode {
     }
 
     public void autonomousPathUpdate() {
+        // If stopped, do nothing
         if (isStopped) return;
 
         switch (pathState) {
@@ -99,7 +96,8 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 1:
-                double threshold1 = 0.42;
+                // --- Score preload ---
+                double threshold1 = 0.42; // adjust as needed
                 boolean motorAtSpeed1 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold1;
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
                 follower.setMaxPowerScaling(0.8);
@@ -131,7 +129,7 @@ public class RedEnc4 extends OpMode {
             case 2:
                 if (distance <= 35) {
                     intakeMotor.setPower(1);
-                    follower.setMaxPowerScaling(0.37);
+                    follower.setMaxPowerScaling(0.25);
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup1, true);
                         intakeMotor.setPower(0);
@@ -143,7 +141,8 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 3:
-                double threshold2 = 0.37;
+                // --- Score first pickup ---
+                double threshold2 = 0.37; // adjust as needed
                 boolean motorAtSpeed2 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold2;
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
                 follower.setMaxPowerScaling(0.8);
@@ -173,6 +172,7 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 4:
+                // Grab second pickup – when close, start intake and then move to score
                 if (distance <= 35) {
                     follower.setMaxPowerScaling(0.35);
                     if (TPS > 20) intakeMotor.setPower(1);
@@ -187,7 +187,8 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 5:
-                double threshold3 = 0.28;
+                // --- Score second pickup ---
+                double threshold3 = 0.28; // adjust as needed
                 boolean motorAtSpeed3 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold3;
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
                 follower.setMaxPowerScaling(0.8);
@@ -232,7 +233,8 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 7:
-                double threshold4 = 0.35;
+                // --- Score third pickup ---
+                double threshold4 = 0.35; // adjust as needed
                 boolean motorAtSpeed4 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold4;
                 outtakeMotor.setPower(0.7);
                 rightBarrier.setPosition(0.6);
@@ -247,6 +249,7 @@ public class RedEnc4 extends OpMode {
                         rightBarrier.setPosition(0.2);
                         actionTimer.resetTimer();
                         intakeMotor.setPower(0);
+                        // Instead of ending, move to final position
                         setPathState(8);
                     }
                 } else if (milliseconds >= 4400 && motorAtSpeed4) {
@@ -262,7 +265,9 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 8:
+                // Move to final position (140,41)
                 follower.followPath(moveToFinal);
+                // Wait until robot reaches the target or time out
                 if (!follower.isBusy() || milliseconds >= 5000) {
                     setPathState(-1);
                 }
@@ -277,14 +282,17 @@ public class RedEnc4 extends OpMode {
 
     @Override
     public void loop() {
+        // Hard cutoff at 29.5 seconds
         if (!isStopped && opmodeTimer.getElapsedTime() >= 29500) {
             isStopped = true;
+            // Stop all motors
             if (outtakeMotor != null) outtakeMotor.setPower(0);
             if (intakeMotor != null) intakeMotor.setPower(0);
             if (intake2 != null) intake2.setPower(0);
             pathState = -1;
         }
 
+        // If stopped, just show cutoff message
         if (isStopped) {
             telemetry.addData("Status", "CUTOFF - Time limit reached");
             telemetry.addData("Runtime (ms)", opmodeTimer.getElapsedTime());
@@ -294,6 +302,7 @@ public class RedEnc4 extends OpMode {
 
         milliseconds = actionTimer.getElapsedTime();
         distance = follower.getDistanceRemaining();
+
         TPS = outtakeMotor.getVelocity();
 
         follower.update();
@@ -325,11 +334,14 @@ public class RedEnc4 extends OpMode {
         kicker = hardwareMap.get(Servo.class, "kicker");
         rightBarrier = hardwareMap.get(Servo.class, "rightBarrier");
 
+        // Configure outtake motor but DO NOT start it
         outtakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         outtakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Important: No setVelocity or setPower here – motor stays off until needed
 
+        // Configure intake motors – use REVERSE so positive power runs inward
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         intake2.setDirection(DcMotorSimple.Direction.FORWARD);
