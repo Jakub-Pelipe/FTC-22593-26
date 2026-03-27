@@ -14,8 +14,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "RedEnc4", group = "Autonomous")
-public class RedEnc4 extends OpMode {
+@Autonomous(name = "BlueEnc", group = "Autonomous")
+public class BlueEnc extends OpMode {
     public double TPS;
     private Follower follower;
     public double milliseconds;
@@ -29,15 +29,16 @@ public class RedEnc4 extends OpMode {
     private int pathState;
 
     // REV Core Hex Motor specifications
-    private final double OUTTAKE_TARGET_VELOCITY = 30; // ticks/sec
+    private final double OUTTAKE_TARGET_VELOCITY = 30; // ticks/sec (adjust as needed)
+    private final double OUTTAKE_HOLD_POWER = 0.65;
 
-    private final Pose startPose = new Pose(133.752, 134.543, Math.toRadians(270));
-    private final Pose scorePose = new Pose(92, 91.396, Math.toRadians(40));
-    private final Pose pickup1Pose = new Pose(140.6, 97.029, Math.toRadians(0));
+    private final Pose startPose = new Pose(34.543, 134.752, Math.toRadians(270));
+    private final Pose scorePose = new Pose(55.613, 77.396, Math.toRadians(140));
+    private final Pose pickup1Pose = new Pose(20.4, 85.029, Math.toRadians(180));
     private final Pose control1 = new Pose(68.465, 57.191);
-    private final Pose control2 = new Pose(75.685, 43.519);
-    private final Pose pickup2Pose = new Pose(145.6, 71.761, Math.toRadians(0));
-    private final Pose pickup3Pose = new Pose(144.6, 41.304, Math.toRadians(0));
+    private final Pose control2 = new Pose(77.685, 30.519);
+    private final Pose pickup2Pose = new Pose(14.4, 60.561, Math.toRadians(180));
+    private final Pose pickup3Pose = new Pose(14.4, 33.604, Math.toRadians(180));
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
@@ -79,9 +80,8 @@ public class RedEnc4 extends OpMode {
 
     public void autonomousPathUpdate() {
         // Precompute speed condition once
-        boolean motorAtSpeed = TPS >= OUTTAKE_TARGET_VELOCITY * 0.65;
+        boolean motorAtSpeed = TPS >= OUTTAKE_TARGET_VELOCITY * 0.45;
 
-        double OUTTAKE_HOLD_POWER = 0.65;
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload);
@@ -91,6 +91,7 @@ public class RedEnc4 extends OpMode {
 
             case 1:
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
+                follower.setMaxPowerScaling(0.8);
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
@@ -132,6 +133,7 @@ public class RedEnc4 extends OpMode {
 
             case 3:
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
+                follower.setMaxPowerScaling(0.8);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -158,7 +160,6 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 4:
-                // Grab second pickup – when close, start intake and then move to score
                 if (distance <= 35) {
                     follower.setMaxPowerScaling(0.35);
                     if (TPS > 20) intakeMotor.setPower(1);
@@ -173,11 +174,11 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 5:
-                outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
+                outtakeMotor.setPower(getOuttakeHoldPower());
+                follower.setMaxPowerScaling(0.8);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
-                // Use both speed condition and a timeout to guarantee progression
                 boolean proceed = (milliseconds >= 5100 && motorAtSpeed) || (milliseconds >= 6000);
                 if (proceed) {
                     outtakeMotor.setPower(0);
@@ -245,6 +246,10 @@ public class RedEnc4 extends OpMode {
         }
     }
 
+    private double getOuttakeHoldPower() {
+        return OUTTAKE_HOLD_POWER;
+    }
+
     public void setPathState(int pState) {
         pathState = pState;
         pathTimer.resetTimer();
@@ -292,11 +297,9 @@ public class RedEnc4 extends OpMode {
         outtakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Important: No setVelocity or setPower here – motor stays off until needed
 
-        // Configure intake motors
-        // intakeMotor: inverted direction (REVERSE) so positive power runs it inward
+        // Configure intake motors – use REVERSE so positive power runs inward
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        // intake2: keep as FORWARD (adjust if needed later)
         intake2.setDirection(DcMotorSimple.Direction.FORWARD);
         intake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
