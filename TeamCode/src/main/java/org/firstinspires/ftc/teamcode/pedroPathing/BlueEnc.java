@@ -33,15 +33,17 @@ public class BlueEnc extends OpMode {
     private final double OUTTAKE_HOLD_POWER = 0.65;
 
     private final Pose startPose = new Pose(34.543, 134.752, Math.toRadians(270));
-    private final Pose scorePose = new Pose(55.613, 77.396, Math.toRadians(140));
+    private final Pose scorePose = new Pose(52.513, 82.996, Math.toRadians(130));
     private final Pose pickup1Pose = new Pose(20.4, 85.029, Math.toRadians(180));
     private final Pose control1 = new Pose(68.465, 57.191);
     private final Pose control2 = new Pose(77.685, 30.519);
-    private final Pose pickup2Pose = new Pose(14.4, 60.561, Math.toRadians(180));
+    private final Pose pickup2Pose = new Pose(13.4, 60.561, Math.toRadians(180));
     private final Pose pickup3Pose = new Pose(14.4, 33.604, Math.toRadians(180));
+    private final Pose finalPose = new Pose(30, 35, Math.toRadians(0)); // final position
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
+    private Path moveToFinal;
 
     public void buildPaths() {
         scorePreload = new Path(new BezierLine(startPose, scorePose));
@@ -76,11 +78,14 @@ public class BlueEnc extends OpMode {
                 .addPath(new BezierLine(pickup3Pose, scorePose))
                 .setLinearHeadingInterpolation(pickup3Pose.getHeading(), scorePose.getHeading())
                 .build();
+
+        moveToFinal = new Path(new BezierLine(scorePose, finalPose));
+        moveToFinal.setLinearHeadingInterpolation(scorePose.getHeading(), finalPose.getHeading());
     }
 
     public void autonomousPathUpdate() {
-        // Precompute speed condition once
-        boolean motorAtSpeed = TPS >= OUTTAKE_TARGET_VELOCITY * 0.45;
+        // Precompute speed condition once (but we'll use per-case thresholds)
+        // Instead, we'll compute motorAtSpeed with a different multiplier for each scoring case.
 
         switch (pathState) {
             case 0:
@@ -90,12 +95,15 @@ public class BlueEnc extends OpMode {
                 break;
 
             case 1:
+                // --- Score preload ---
+                double threshold1 = 0.42; // adjust as needed
+                boolean motorAtSpeed1 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold1;
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
                 follower.setMaxPowerScaling(0.8);
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
-                if (milliseconds >= 5500 && motorAtSpeed) {
+                if (milliseconds >= 5500 && motorAtSpeed1) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
@@ -105,19 +113,20 @@ public class BlueEnc extends OpMode {
                         actionTimer.resetTimer();
                         setPathState(2);
                     }
-                } else if (milliseconds >= 5000 && motorAtSpeed) {
+                } else if (milliseconds >= 5000 && motorAtSpeed1) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 } else if (milliseconds >= 3800) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 3100 && motorAtSpeed) {
+                } else if (milliseconds >= 3100 && motorAtSpeed1) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 }
                 break;
 
             case 2:
+                // Grab first pickup
                 if (distance <= 35) {
                     intakeMotor.setPower(1);
                     follower.setMaxPowerScaling(0.25);
@@ -132,12 +141,15 @@ public class BlueEnc extends OpMode {
                 break;
 
             case 3:
+                // --- Score first pickup ---
+                double threshold2 = 0.37; // adjust as needed
+                boolean motorAtSpeed2 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold2;
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
                 follower.setMaxPowerScaling(0.8);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
-                if (milliseconds >= 4600 && motorAtSpeed) {
+                if (milliseconds >= 4600 && motorAtSpeed2) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
@@ -147,19 +159,20 @@ public class BlueEnc extends OpMode {
                         actionTimer.resetTimer();
                         setPathState(4);
                     }
-                } else if (milliseconds >= 3600 && motorAtSpeed) {
+                } else if (milliseconds >= 3600 && motorAtSpeed2) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 } else if (milliseconds >= 2500) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 2100 && motorAtSpeed) {
+                } else if (milliseconds >= 2100 && motorAtSpeed2) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 }
                 break;
 
             case 4:
+                // Grab second pickup
                 if (distance <= 35) {
                     follower.setMaxPowerScaling(0.35);
                     if (TPS > 20) intakeMotor.setPower(1);
@@ -174,12 +187,15 @@ public class BlueEnc extends OpMode {
                 break;
 
             case 5:
+                // --- Score second pickup ---
+                double threshold3 = 0.35; // adjust as needed
+                boolean motorAtSpeed3 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold3;
                 outtakeMotor.setPower(getOuttakeHoldPower());
                 follower.setMaxPowerScaling(0.8);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
-                boolean proceed = (milliseconds >= 5100 && motorAtSpeed) || (milliseconds >= 6000);
+                boolean proceed = (milliseconds >= 5100 && motorAtSpeed3) || (milliseconds >= 6000);
                 if (proceed) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
@@ -190,19 +206,20 @@ public class BlueEnc extends OpMode {
                         actionTimer.resetTimer();
                         setPathState(6);
                     }
-                } else if (milliseconds >= 4200 && motorAtSpeed) {
+                } else if (milliseconds >= 4200 && motorAtSpeed3) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 } else if (milliseconds >= 3200) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 2500 && motorAtSpeed) {
+                } else if (milliseconds >= 2500 && motorAtSpeed3) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 }
                 break;
 
             case 6:
+                // Grab third pickup
                 if (distance <= 35) {
                     follower.setMaxPowerScaling(0.35);
                     if (TPS > 20) intakeMotor.setPower(1);
@@ -217,11 +234,14 @@ public class BlueEnc extends OpMode {
                 break;
 
             case 7:
+                // --- Score third pickup ---
+                double threshold4 = 0.35; // adjust as needed
+                boolean motorAtSpeed4 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold4;
                 outtakeMotor.setPower(0.7);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
-                proceed = (milliseconds >= 5200 && motorAtSpeed) || (milliseconds >= 6200);
+                proceed = (milliseconds >= 5200 && motorAtSpeed4) || (milliseconds >= 6200);
                 if (proceed) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
@@ -230,17 +250,27 @@ public class BlueEnc extends OpMode {
                         rightBarrier.setPosition(0.2);
                         actionTimer.resetTimer();
                         intakeMotor.setPower(0);
-                        setPathState(-1);
+                        // Instead of ending, move to final position
+                        setPathState(8);
                     }
-                } else if (milliseconds >= 4400 && motorAtSpeed) {
+                } else if (milliseconds >= 4400 && motorAtSpeed4) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 } else if (milliseconds >= 3800) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 3000 && motorAtSpeed) {
+                } else if (milliseconds >= 3000 && motorAtSpeed4) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
+                }
+                break;
+
+            case 8:
+                // Move to final position (15,33)
+                follower.followPath(moveToFinal);
+                // Wait until robot reaches the target or time out
+                if (!follower.isBusy() || milliseconds >= 5000) {
+                    setPathState(-1);
                 }
                 break;
         }
