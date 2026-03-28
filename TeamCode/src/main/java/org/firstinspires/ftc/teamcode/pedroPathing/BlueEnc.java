@@ -33,7 +33,7 @@ public class BlueEnc extends OpMode {
     private final double OUTTAKE_TARGET_VELOCITY = 30; // ticks/sec (adjust as needed)
     private final double OUTTAKE_HOLD_POWER = 0.65;
 
-    private final Pose startPose = new Pose(34.543, 134.752, Math.toRadians(270));
+    private final Pose startPose = new Pose(29.543, 134.752, Math.toRadians(270));
     private final Pose scorePose = new Pose(47.0, 82.996, Math.toRadians(130));
     private final Pose pickup1Pose = new Pose(15.9, 85.029, Math.toRadians(180));
     private final Pose control1 = new Pose(68.465, 57.191);
@@ -143,7 +143,7 @@ public class BlueEnc extends OpMode {
 
             case 3:
                 // --- Score first pickup ---
-                double threshold2 = 0.37; // adjust as needed
+                double threshold2 = 0.34; // adjust as needed
                 boolean motorAtSpeed2 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold2;
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
                 follower.setMaxPowerScaling(0.8);
@@ -381,5 +381,7 @@ public class BlueEnc extends OpMode {
         if (outtakeMotor != null) outtakeMotor.setPower(0);
         if (intakeMotor != null) intakeMotor.setPower(0);
         if (intake2 != null) intake2.setPower(0);
+        follower.setMaxPowerScaling(0);
+
     }
 }
