@@ -286,6 +286,9 @@ public class BlueTop extends OpMode {
         else{
             onSpeed=false;
         }
+        if (milliseconds>=30000){
+            pathState=-1;
+        }
         // These loop the movements of the robot, these must be called continuously in order to work
         follower.update();
         autonomousPathUpdate();
