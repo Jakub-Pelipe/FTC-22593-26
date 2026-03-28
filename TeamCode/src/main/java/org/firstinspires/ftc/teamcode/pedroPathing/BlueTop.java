@@ -10,6 +10,7 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous (name="BlueTop", group = "Autonomous")
@@ -17,6 +18,7 @@ public class BlueTop extends OpMode {
     private Follower follower;
     public double milliseconds;
     public double distance;
+    public boolean onSpeed;
     private DcMotor outtakeMotor;
     private DcMotor intakeMotor;
     private DcMotor intake2;
@@ -24,6 +26,7 @@ public class BlueTop extends OpMode {
     private Servo rightBarrier;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
+    public double TPS;
     private final Pose startPose = new Pose(34.543, 134.752, Math.toRadians(270)); // Start Pose of our robot.
     private final Pose scorePose = new Pose(63.613, 83.396, Math.toRadians(140)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
     private final Pose pickup1Pose = new Pose(16.4, 85.029, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
@@ -72,6 +75,7 @@ public class BlueTop extends OpMode {
     }
 
     public void autonomousPathUpdate() {
+
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload);
@@ -79,7 +83,7 @@ public class BlueTop extends OpMode {
                 pathState=1;;
                 break;
             case 1:
-                outtakeMotor.setPower(0.65);
+                outtakeMotor.setPower(0.8);
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
@@ -97,7 +101,7 @@ public class BlueTop extends OpMode {
 
                 }
 
-                else if (milliseconds>=5000){
+                else if (milliseconds>=5000 && onSpeed){
                     intake2.setPower(1);
                     intakeMotor.setPower(-1);
                 }
@@ -106,7 +110,7 @@ public class BlueTop extends OpMode {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
                 }
-                else if (milliseconds>=3100){
+                else if (milliseconds>=3100 && onSpeed){
                     intakeMotor.setPower(-1);
                     intake2.setPower(1);
                 }
@@ -127,7 +131,7 @@ public class BlueTop extends OpMode {
                 }
                 break;
             case 3:
-                outtakeMotor.setPower(0.65);
+                outtakeMotor.setPower(0.8);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -145,7 +149,7 @@ public class BlueTop extends OpMode {
 
                 }
 
-                else if (milliseconds>=3600){
+                else if (milliseconds>=3600 && onSpeed){
                     intake2.setPower(1);
                     intakeMotor.setPower(-1);
                 }
@@ -154,7 +158,7 @@ public class BlueTop extends OpMode {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
                 }
-                else if (milliseconds>=2100){
+                else if (milliseconds>=2100 && onSpeed){
                     intakeMotor.setPower(-1);
                     intake2.setPower(1);
                 }
@@ -175,7 +179,7 @@ public class BlueTop extends OpMode {
                 }
                 break;
             case 5:
-                outtakeMotor.setPower(0.65);
+                outtakeMotor.setPower(0.8);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -224,7 +228,7 @@ public class BlueTop extends OpMode {
                 }
                 break;
             case 7:
-                outtakeMotor.setPower(0.65);
+                outtakeMotor.setPower(0.8);
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
@@ -243,7 +247,7 @@ public class BlueTop extends OpMode {
                 }
 
                //change timing
-                else if (milliseconds>=4400){
+                else if (milliseconds>=4400 && onSpeed){
                     intake2.setPower(1);
                     intakeMotor.setPower(-1);
                 }
@@ -252,7 +256,7 @@ public class BlueTop extends OpMode {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
                 }
-                else if (milliseconds>=3000){
+                else if (milliseconds>=3000 && onSpeed){
                     intakeMotor.setPower(-1);
                     intake2.setPower(1);
                 }
@@ -275,6 +279,13 @@ public class BlueTop extends OpMode {
     public void loop() {
         milliseconds=actionTimer.getElapsedTime();
         distance=follower.getDistanceRemaining();
+        TPS=((DcMotorEx)outtakeMotor).getVelocity();
+        if (TPS>=29){
+            onSpeed=true;
+        }
+        else{
+            onSpeed=false;
+        }
         // These loop the movements of the robot, these must be called continuously in order to work
         follower.update();
         autonomousPathUpdate();
@@ -298,11 +309,14 @@ public class BlueTop extends OpMode {
         actionTimer=new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-        outtakeMotor=hardwareMap.get(DcMotor.class,"outtakeMotor");
+        outtakeMotor=hardwareMap.get(DcMotorEx.class,"outtakeMotor");
         intakeMotor=hardwareMap.get(DcMotor.class,"intakeMotor");
         intake2=hardwareMap.get(DcMotor.class,"intake2");
         kicker=hardwareMap.get(Servo.class,"kicker");
         rightBarrier=hardwareMap.get(Servo.class,"rightBarrier");
+        outtakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ((DcMotorEx)outtakeMotor).setVelocity(30);
 
 
         follower = Constants.createFollower(hardwareMap);
@@ -326,7 +340,6 @@ public class BlueTop extends OpMode {
     public void start() {
         opmodeTimer.resetTimer();
         pathTimer.resetTimer();
-
         setPathState(0);
     }
 
