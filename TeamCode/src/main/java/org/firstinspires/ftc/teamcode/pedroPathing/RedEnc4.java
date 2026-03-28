@@ -34,13 +34,13 @@ public class RedEnc4 extends OpMode {
     private final double OUTTAKE_HOLD_POWER = 0.65;
 
     private final Pose startPose = new Pose(133.752, 134.752, Math.toRadians(270));
-    private final Pose scorePose = new Pose(119, 94.396, Math.toRadians(40));
-    private final Pose pickup1Pose = new Pose(140.6, 97.029, Math.toRadians(0));
+    private final Pose scorePose = new Pose(119, 94.396, Math.toRadians(47.5));
+    private final Pose pickup1Pose = new Pose(151.6, 97.029, Math.toRadians(0));
     // Original control points (restored)
     private final Pose control1 = new Pose(73.465, 57.191, Math.toRadians(0));
     private final Pose control2 = new Pose(85.685, 43.519, Math.toRadians(0));
-    private final Pose pickup2Pose = new Pose(148.6, 71.761, Math.toRadians(0));
-    private final Pose pickup3Pose = new Pose(148.6, 41.761, Math.toRadians(0));
+    private final Pose pickup2Pose = new Pose(156.6, 72.2, Math.toRadians(0));
+    private final Pose pickup3Pose = new Pose(156.6, 41.761, Math.toRadians(0));
     private final Pose finalPose = new Pose(140, 81, Math.toRadians(0));
 
     private Path scorePreload;
@@ -127,7 +127,7 @@ public class RedEnc4 extends OpMode {
             case 2:
                 if (distance <= 35) {
                     intakeMotor.setPower(1);
-                    follower.setMaxPowerScaling(0.37);
+                    follower.setMaxPowerScaling(0.41);
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup1, true);
                         intakeMotor.setPower(0);
@@ -168,7 +168,7 @@ public class RedEnc4 extends OpMode {
 
             case 4:
                 if (distance <= 35) {
-                    follower.setMaxPowerScaling(0.35);
+                    follower.setMaxPowerScaling(0.45);
                     if (TPS > 20) intakeMotor.setPower(1);
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup2, true);
@@ -211,7 +211,7 @@ public class RedEnc4 extends OpMode {
 
             case 6:
                 if (distance <= 35) {
-                    follower.setMaxPowerScaling(0.35);
+                    follower.setMaxPowerScaling(0.45);
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup3, true);
                         intakeMotor.setPower(0);
