@@ -34,13 +34,13 @@ public class RedEnc4 extends OpMode {
     private final double OUTTAKE_HOLD_POWER = 0.65;
 
     private final Pose startPose = new Pose(133.752, 134.752, Math.toRadians(270));
-    private final Pose scorePose = new Pose(119, 94.396, Math.toRadians(47.5));
-    private final Pose pickup1Pose = new Pose(151.6, 97.029, Math.toRadians(0));
+    private final Pose scorePose = new Pose(117, 94.396, Math.toRadians(50));
+    private final Pose pickup1Pose = new Pose(151.9, 98.029, Math.toRadians(0));
     // Original control points (restored)
     private final Pose control1 = new Pose(73.465, 57.191, Math.toRadians(0));
     private final Pose control2 = new Pose(85.685, 43.519, Math.toRadians(0));
-    private final Pose pickup2Pose = new Pose(156.6, 72.2, Math.toRadians(0));
-    private final Pose pickup3Pose = new Pose(156.6, 41.761, Math.toRadians(0));
+    private final Pose pickup2Pose = new Pose(156, 71.7, Math.toRadians(0));
+    private final Pose pickup3Pose = new Pose(154.6, 43.461, Math.toRadians(0));
     private final Pose finalPose = new Pose(140, 81, Math.toRadians(0));
 
     private Path scorePreload;
@@ -138,7 +138,7 @@ public class RedEnc4 extends OpMode {
                 break;
 
             case 3:
-                double threshold2 = 0.37;
+                double threshold2 = 0.42;
                 boolean motorAtSpeed2 = TPS >= OUTTAKE_TARGET_VELOCITY * threshold2;
                 outtakeMotor.setPower(OUTTAKE_HOLD_POWER);
                 follower.setMaxPowerScaling(0.8);
