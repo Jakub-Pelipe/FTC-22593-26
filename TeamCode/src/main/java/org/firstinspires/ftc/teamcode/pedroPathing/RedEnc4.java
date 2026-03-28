@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class RedEnc4 extends OpMode {
     public double TPS;
     private Follower follower;
-    public double milliseconds;
+    public double totalTime;
     public double distance;
     private DcMotorEx outtakeMotor;
     private DcMotor intakeMotor;
@@ -27,7 +27,7 @@ public class RedEnc4 extends OpMode {
     private Servo rightBarrier;
     public Timer pathTimer, opmodeTimer, actionTimer;
     private int pathState;
-    private boolean isStopped = false;  // flag for hard cutoff
+    private boolean isStopped = false;
 
     // REV Core Hex Motor specifications
     private final double OUTTAKE_TARGET_VELOCITY = 30; // ticks/sec
@@ -36,11 +36,12 @@ public class RedEnc4 extends OpMode {
     private final Pose startPose = new Pose(133.752, 134.752, Math.toRadians(270));
     private final Pose scorePose = new Pose(119, 94.396, Math.toRadians(40));
     private final Pose pickup1Pose = new Pose(140.6, 97.029, Math.toRadians(0));
-    private final Pose control1 = new Pose(73.465, 57.191 , Math.toRadians(0));
-    private final Pose control2 = new Pose(85.685, 43.519);
+    // Original control points (restored)
+    private final Pose control1 = new Pose(73.465, 57.191, Math.toRadians(0));
+    private final Pose control2 = new Pose(85.685, 43.519, Math.toRadians(0));
     private final Pose pickup2Pose = new Pose(148.6, 71.761, Math.toRadians(0));
     private final Pose pickup3Pose = new Pose(148.6, 41.761, Math.toRadians(0));
-    private final Pose finalPose = new Pose(140, 81, Math.toRadians(0)); // final position
+    private final Pose finalPose = new Pose(140, 81, Math.toRadians(0));
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
@@ -50,7 +51,6 @@ public class RedEnc4 extends OpMode {
         scorePreload = new Path(new BezierLine(startPose, scorePose));
         scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
 
-        // First pickup (straight line)
         grabPickup1 = follower.pathBuilder()
                 .addPath(new BezierLine(scorePose, pickup1Pose))
                 .setTangentHeadingInterpolation()
@@ -61,7 +61,6 @@ public class RedEnc4 extends OpMode {
                 .setLinearHeadingInterpolation(pickup1Pose.getHeading(), scorePose.getHeading())
                 .build();
 
-        // Second pickup – BezierCurve with leftward control point
         grabPickup2 = follower.pathBuilder()
                 .addPath(new BezierCurve(scorePose, control1, pickup2Pose))
                 .setTangentHeadingInterpolation()
@@ -72,7 +71,6 @@ public class RedEnc4 extends OpMode {
                 .setLinearHeadingInterpolation(pickup2Pose.getHeading(), scorePose.getHeading())
                 .build();
 
-        // Third pickup – BezierCurve with leftward control point
         grabPickup3 = follower.pathBuilder()
                 .addPath(new BezierCurve(scorePose, control2, pickup3Pose))
                 .setTangentHeadingInterpolation()
@@ -89,12 +87,12 @@ public class RedEnc4 extends OpMode {
 
     public void autonomousPathUpdate() {
         if (isStopped) return;
+        double stateTime = pathTimer.getElapsedTime();
 
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload);
-                actionTimer.resetTimer();
-                pathState = 1;
+                setPathState(1);
                 break;
 
             case 1:
@@ -105,23 +103,22 @@ public class RedEnc4 extends OpMode {
                 kicker.setPosition(0);
                 rightBarrier.setPosition(0.6);
 
-                if (milliseconds >= 5500 && motorAtSpeed1) {
+                if (stateTime >= 5500 && motorAtSpeed1) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
                         follower.followPath(grabPickup1, true);
                         kicker.setPosition(0.6);
                         rightBarrier.setPosition(0.2);
-                        actionTimer.resetTimer();
                         setPathState(2);
                     }
-                } else if (milliseconds >= 5000 && motorAtSpeed1) {
+                } else if (stateTime >= 5000 && motorAtSpeed1) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
-                } else if (milliseconds >= 3800) {
+                } else if (stateTime >= 3800) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 3100 && motorAtSpeed1) {
+                } else if (stateTime >= 3100 && motorAtSpeed1) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 }
@@ -135,7 +132,6 @@ public class RedEnc4 extends OpMode {
                         follower.followPath(scorePickup1, true);
                         intakeMotor.setPower(0);
                         follower.setMaxPowerScaling(1);
-                        actionTimer.resetTimer();
                         setPathState(3);
                     }
                 }
@@ -149,23 +145,22 @@ public class RedEnc4 extends OpMode {
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
-                if (milliseconds >= 4600 && motorAtSpeed2) {
+                if (stateTime >= 4600 && motorAtSpeed2) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
                         follower.followPath(grabPickup2, true);
                         kicker.setPosition(0.6);
                         rightBarrier.setPosition(0.2);
-                        actionTimer.resetTimer();
                         setPathState(4);
                     }
-                } else if (milliseconds >= 3600 && motorAtSpeed2) {
+                } else if (stateTime >= 3600 && motorAtSpeed2) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
-                } else if (milliseconds >= 2500) {
+                } else if (stateTime >= 2500) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 2100 && motorAtSpeed2) {
+                } else if (stateTime >= 2100 && motorAtSpeed2) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 }
@@ -179,7 +174,6 @@ public class RedEnc4 extends OpMode {
                         follower.followPath(scorePickup2, true);
                         intakeMotor.setPower(0);
                         follower.setMaxPowerScaling(1);
-                        actionTimer.resetTimer();
                         setPathState(5);
                     }
                 }
@@ -193,7 +187,7 @@ public class RedEnc4 extends OpMode {
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
-                boolean proceed = (milliseconds >= 5100 && motorAtSpeed3) || (milliseconds >= 6000);
+                boolean proceed = (stateTime >= 5100 && motorAtSpeed3) || (stateTime >= 6000);
                 if (proceed) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
@@ -201,16 +195,15 @@ public class RedEnc4 extends OpMode {
                         follower.followPath(grabPickup3, true);
                         kicker.setPosition(0.6);
                         rightBarrier.setPosition(0.2);
-                        actionTimer.resetTimer();
                         setPathState(6);
                     }
-                } else if (milliseconds >= 4200 && motorAtSpeed3) {
+                } else if (stateTime >= 4200 && motorAtSpeed3) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
-                } else if (milliseconds >= 3200) {
+                } else if (stateTime >= 3200) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 2500 && motorAtSpeed3) {
+                } else if (stateTime >= 2500 && motorAtSpeed3) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 }
@@ -219,12 +212,10 @@ public class RedEnc4 extends OpMode {
             case 6:
                 if (distance <= 35) {
                     follower.setMaxPowerScaling(0.35);
-                    if (TPS > 20) intakeMotor.setPower(1);
                     if (!follower.isBusy()) {
                         follower.followPath(scorePickup3, true);
                         intakeMotor.setPower(0);
                         follower.setMaxPowerScaling(1);
-                        actionTimer.resetTimer();
                         setPathState(7);
                     }
                 }
@@ -237,24 +228,23 @@ public class RedEnc4 extends OpMode {
                 rightBarrier.setPosition(0.6);
                 kicker.setPosition(0);
 
-                proceed = (milliseconds >= 5200 && motorAtSpeed4) || (milliseconds >= 6200);
+                proceed = (stateTime >= 5200 && motorAtSpeed4) || (stateTime >= 6200);
                 if (proceed) {
                     outtakeMotor.setPower(0);
                     intake2.setPower(0);
                     if (!follower.isBusy()) {
                         kicker.setPosition(0.6);
                         rightBarrier.setPosition(0.2);
-                        actionTimer.resetTimer();
                         intakeMotor.setPower(0);
                         setPathState(8);
                     }
-                } else if (milliseconds >= 4400 && motorAtSpeed4) {
+                } else if (stateTime >= 4400 && motorAtSpeed4) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
-                } else if (milliseconds >= 3800) {
+                } else if (stateTime >= 3800) {
                     intake2.setPower(0);
                     intakeMotor.setPower(0);
-                } else if (milliseconds >= 3000 && motorAtSpeed4) {
+                } else if (stateTime >= 3000 && motorAtSpeed4) {
                     intakeMotor.setPower(1);
                     if (TPS > 20) intake2.setPower(1);
                 }
@@ -262,7 +252,15 @@ public class RedEnc4 extends OpMode {
 
             case 8:
                 follower.followPath(moveToFinal);
-                if (!follower.isBusy() || milliseconds >= 5000) {
+                setPathState(9);
+                break;
+
+            case 9:
+                if (!follower.isBusy()) {
+                    follower.breakFollowing();
+                    setPathState(-1);
+                } else if (stateTime >= 5000) {
+                    follower.breakFollowing();
                     setPathState(-1);
                 }
                 break;
@@ -281,6 +279,7 @@ public class RedEnc4 extends OpMode {
             if (outtakeMotor != null) outtakeMotor.setPower(0);
             if (intakeMotor != null) intakeMotor.setPower(0);
             if (intake2 != null) intake2.setPower(0);
+            if (follower != null) follower.breakFollowing();
             pathState = -1;
         }
 
@@ -291,7 +290,7 @@ public class RedEnc4 extends OpMode {
             return;
         }
 
-        milliseconds = actionTimer.getElapsedTime();
+        totalTime = opmodeTimer.getElapsedTime();
         distance = follower.getDistanceRemaining();
         TPS = outtakeMotor.getVelocity();
 
@@ -302,12 +301,12 @@ public class RedEnc4 extends OpMode {
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
-        telemetry.addData("time", milliseconds);
+        telemetry.addData("state time", pathTimer.getElapsedTime());
         telemetry.addData("Distance", distance);
         telemetry.addData("Outtake TPS", TPS);
         telemetry.addData("Outtake Target", OUTTAKE_TARGET_VELOCITY);
         telemetry.addData("TPS %", (TPS / OUTTAKE_TARGET_VELOCITY) * 100);
-        telemetry.addData("Runtime (ms)", opmodeTimer.getElapsedTime());
+        telemetry.addData("Runtime (ms)", totalTime);
         telemetry.update();
     }
 
